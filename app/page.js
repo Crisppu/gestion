@@ -1,22 +1,20 @@
 'use client'
-import Image from "next/image";
-import RootLayout from "./layout";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { selectCounter, setCounter } from "@/redux/features/counterSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 
 export default function Home() {
-  const [first, setFirst] = useState('luz')
-  const prueba = () =>{
-    setFirst('dark')
+  const selector = useSelector(selectCounter);
+  const dispatch = useDispatch();
+  const updateValue = () =>{
+    dispatch(setCounter({counter:selector+1}))
   }
-  const darkMode = useSelector((state) => state.darkModeReducer.mode);
-  console.log(darkMode)
   return (
-    <RootLayout  text={first}>
-      <main className="bg-red-300 dark:bg-black">
-        <h1> soy el home</h1>
-        <button onClick={()=>prueba()}> cambiar modo dark</button>
-      </main>
-    </RootLayout>
+
+      <main className="h-screen bg-red-500 dark:bg-black">
+        <h1 className="text-red-500"> soy el home</h1>
+        <h2>{selector}</h2>
+        <button onClick={updateValue}> cambiar modo dark</button>
+    </main>
   );
 }
