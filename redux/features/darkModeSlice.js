@@ -6,22 +6,23 @@ const initialState = {
     mode : 'light',
 }
 
-export const styleSlice= createSlice (
+export const darkModeSlice = createSlice (
 
     {
         name:'darkModeSlice',
         initialState,
         reducers:{
-            changeMode:(state)=>{
-                console.log(state)
+            setMode:(state)=>{
                 state.mode = state.mode == 'light' ? 'dark':'light';
             }
         }
     }
 )
 //las actions serian todas las function que esten dentro del reducers
-//para este caso solo tenemos una funtion(changeMode) dentro del reducers
-export const {changeMode} = styleSlice.actions;
+//para este caso solo tenemos una funtion(setMode) dentro del reducers
+export const {setMode} = darkModeSlice.actions;
 //esta linea dara el valor initial a este Slice cuando lo llamemos desde el story
-export default styleSlice.reducer;
+export default darkModeSlice.reducer;
+
+export const selectDarkMode = (state) => state.darkModeState.mode
 
