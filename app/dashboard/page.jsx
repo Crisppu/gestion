@@ -1,6 +1,6 @@
 
 export default function Page() {
   return (
-    <div>page dashboard</div>
+    <div className={'text-green-600 '}>page dashboard</div>
   )
 }
