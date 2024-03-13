@@ -23,7 +23,7 @@ export default function NavLinks() {
                         className={`${pathname === link.href ? 'bg-sky-100 text-green-400': 'text-gray-600'}
                             flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-100 p-3
                             text-sm font-medium hover:bg-sky-100 hover:text-green-600 md:flex-none md:justify-start
-                            md:p-2 md:px-3 `
+                            md:p-2 md:px-3 dark:bg-black hover:dark:bg-slate-400`
                         }
                     >
                         <LinkIcon className="w-6" />
