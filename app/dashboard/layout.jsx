@@ -2,19 +2,22 @@
 import { selectDarkMode} from "@/redux/features/darkModeSlice";
 import { useSelector } from "react-redux";
 import SideNav from "../components/SideNav/SideNav";
+import NavBar from "../components/NavBar/NavBar";
 
 
 
 export default function Layout({ children}) {
 
     const modeSelector = useSelector(selectDarkMode);
-    console.log(modeSelector)
     return (
         <div className={`flex h-screen flex-col md:flex-row md:overflow-hidden ${modeSelector} dark:bg-black`}>
             <div className='w-full flex-none md:w-64'>
                 <SideNav></SideNav>
             </div>
-            <div className='flex-grow p-6 md:overflow-y-auto md:p-2'>
+            <div className='flex-grow md:overflow-y-auto md:p-2'>
+                <div className="flex justify-end mb-2 h-20 pr-2 shrink-0 items-center rounded-lg bg-green-400  md:h-[80px] ">
+                    <NavBar></NavBar>
+                </div>
                 {children}
 
             </div>

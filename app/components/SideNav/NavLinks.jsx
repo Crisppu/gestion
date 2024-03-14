@@ -20,9 +20,9 @@ export default function NavLinks() {
                 const LinkIcon = link.icon;
                 return (
                     <Link key={link.name} href={link.href}
-                        className={`${pathname === link.href ? 'bg-sky-100 text-green-400': 'text-gray-600'}
-                            flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-100 p-3
-                            text-sm font-medium hover:bg-sky-100 hover:text-green-600 md:flex-none md:justify-start
+                        className={`${pathname === link.href ? 'bg-sky-100 dark:bg-slate-700 text-green-400': 'bg-gray-100 text-gray-600'}
+                            flex h-[48px] grow items-center justify-center gap-2 rounded-md  p-3
+                            text-sm font-medium hover:bg-sky-200  md:flex-none md:justify-start
                             md:p-2 md:px-3 dark:bg-black hover:dark:bg-slate-400`
                         }
                     >
