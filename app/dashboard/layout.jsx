@@ -11,15 +11,12 @@ export default function Layout({ children}) {
     const modeSelector = useSelector(selectDarkMode);
     return (
         <div className={`flex h-screen flex-col md:flex-row md:overflow-hidden ${modeSelector} dark:bg-black`}>
-            <div className='w-full flex-none md:w-64'>
-                <SideNav></SideNav>
-            </div>
+            <SideNav></SideNav>
             <div className='flex-grow md:overflow-y-auto md:p-2'>
-                <div className="flex justify-end mb-2 h-20 pr-2 shrink-0 items-center rounded-lg bg-green-400  md:h-[80px] ">
+                <div className="flex justify-end mb-2 h-20 pr-2 shrink-0 items-center rounded-lg bg-green-400  md:h-20 ">
                     <NavBar></NavBar>
                 </div>
                 {children}
-
             </div>
        </div>
 
