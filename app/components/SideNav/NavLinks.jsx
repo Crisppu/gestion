@@ -20,10 +20,10 @@ export default function NavLinks() {
                 const LinkIcon = link.icon;
                 return (
                     <Link key={link.name} href={link.href}
-                        className={`${pathname === link.href ? 'bg-sky-100 dark:bg-slate-700 text-green-400': 'bg-gray-100 text-gray-600'}
+                        className={`${pathname === link.href ? 'bg-sky-100 dark:bg-slate-700 text-green-400': 'bg-gray-100 text-gray-600 hover:bg-slate-400'}
                             flex h-[48px] grow items-center justify-center gap-2 rounded-md  p-3
-                            text-sm font-medium hover:bg-sky-200  md:flex-none md:justify-start
-                            md:p-2 md:px-3 dark:bg-black hover:dark:bg-slate-400`
+                            text-sm font-medium   md:flex-none md:justify-start
+                            md:p-2 md:px-3 dark:bg-black `
                         }
                     >
                         <LinkIcon className="w-6" />
@@ -35,3 +35,6 @@ export default function NavLinks() {
         </>
     );
 }
+/**
+ * hover:dark:bg-slate-400 hover:bg-sky-200
+ */

@@ -1,12 +1,16 @@
-// 'use client'
+'use client'
 import Link from 'next/link';
 import NavLinks from './NavLinks';
 import LogoSantaAna from '../LogoSantaAna/LogoSantaAna';
 import { PowerIcon ,ChevronDoubleRightIcon} from '@heroicons/react/24/outline';
+import { selectArrowSideNav } from '@/redux/features/arrowSideNavSlice';
+import { useSelector } from 'react-redux';
 
 
 
 export default function SideNav () {
+    const arrowState = useSelector(selectArrowSideNav);
+    console.log(arrowState)
     return (
         <div className='flex items-center w-full md:w-72'>
             <div className="flex flex-grow  h-full flex-col px-3 py-4 md:px-2 bg-gray-300 dark:bg-slate-600 ">
@@ -19,14 +23,14 @@ export default function SideNav () {
                     <NavLinks />
                     <div className="hidden h-auto w-full grow rounded-md bg-gray-100 dark:bg-black  md:block"></div>
                     <form>
-                        <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-100 hover:bg-sky-100 p-3 text-sm font-medium text-gray-600 dark:bg-black hover:dark:bg-slate-400  md:flex-none md:justify-start md:p-2 md:px-3">
+                        <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-100  p-3 text-sm font-medium text-gray-600 dark:bg-black hover:bg-slate-400  md:flex-none md:justify-start md:p-2 md:px-3">
                             <PowerIcon className="w-6 " />
                             <div className="hidden md:block ">Sign Out</div>
                         </button>
                     </form>
                 </div>
             </div>
-            <ChevronDoubleRightIcon className='w-6 h-6 cursor-pointer hidden md:block'></ChevronDoubleRightIcon>
+            <ChevronDoubleRightIcon className='w-6 h-6 cursor-pointer hidden md:block text-slate-700'></ChevronDoubleRightIcon>
         </div>
     );
 }

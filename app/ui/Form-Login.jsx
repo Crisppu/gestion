@@ -62,6 +62,7 @@ export default function FormLogin() {
                     <Form className={'flex flex-col '} onSubmit={handleSubmit}>
                         <label htmlFor="email" className="block text-gray-600 cursor-text text-base leading-[140%] font-normal mb-2">email</label>
                         <Field
+                            autoComplete="email"
                             id="email"
                             name="email"
                             placeholder="example@email.com"
@@ -73,8 +74,9 @@ export default function FormLogin() {
                                 <ErrorMessage name='email'></ErrorMessage>
                             </div>
                         )}
-                        <label htmlFor="password" className="block text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">password</label>
+                        <label  htmlFor="password" className="block text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">password</label>
                         <Field
+                            autoComplete="current-password"
                             id="password"
                             name="password"
                             placeholder="password"

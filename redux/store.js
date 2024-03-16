@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import counterReducer from './features/counterSlice';
 import darkModeSlice from "./features/darkModeSlice";
+import arrowSideNavSlice from "./features/arrowSideNavSlice";
 
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
@@ -14,7 +15,8 @@ const persistConfig ={
 }
 const rootReducer = combineReducers({
     counterState: counterReducer,
-    darkModeState:darkModeSlice
+    darkModeState:darkModeSlice,
+    arrowSideNavState:arrowSideNavSlice
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
