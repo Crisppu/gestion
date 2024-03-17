@@ -1,7 +1,6 @@
 'use client'
 import Link from 'next/link';
 import NavLinks from './NavLinks';
-import LogoSantaAna from '../LogoSantaAna/LogoSantaAna';
 import { PowerIcon ,ChevronDoubleRightIcon} from '@heroicons/react/24/outline';
 import { selectArrowSideNav, setArrowSideNav } from '@/redux/features/arrowSideNavSlice';
 import { useDispatch, useSelector } from 'react-redux';
