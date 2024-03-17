@@ -12,7 +12,7 @@ const links = [
 
 
 
-export default function NavLinks() {
+export default function NavLinks({useSelectorArrow}) {
     const pathname=usePathname(); //'/dashboard/invoices' me envia el enlace en donde esta actualmente
     return (
         <>
@@ -27,7 +27,7 @@ export default function NavLinks() {
                         }
                     >
                         <LinkIcon className="w-6" />
-                        <p className="hidden md:block ">{link.name}</p>
+                        <p className={`hidden ${useSelectorArrow ? 'hidden':'md:block '}`}>{link.name}</p>
                     </Link>
                 );
             })
