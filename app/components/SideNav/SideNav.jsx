@@ -11,12 +11,12 @@ export default function SideNav () {
     const arrowState = useSelector(selectArrowSideNav);
     const dispatch = useDispatch();
     return (
-        <div className={`flex items-center w-full transition-all duration-300 ${arrowState ? 'md:w-[85px]' : 'md:w-72'}`}>
+        <div className={`flex items-center w-full transition-all duration-300 ${arrowState ? 'md:w-[90px]' : 'md:w-72'}`}>
             <div className="flex flex-grow h-full flex-col px-3 py-4 md:px-2 bg-gray-300 dark:bg-slate-600 ">
                 <div className='mb-2  rounded-md bg-green-400  flex justify-center items-center h-32'>
                     <Link  href="/">
                         <div className={` flex flex-col justify-center items-center leading-none text-white  `}>
-                            <Image src={'/logoSantaAna.png'} priority width={150} height={100}  alt='logo-ingenio'  className={`${arrowState ? 'md:w-16 ':'w-36'}`}/>
+                            <Image src={'/logoSantaAna.png'} priority width={150} height={100}  alt='logo-ingenio'  className={`${arrowState ? 'md:w-14 ':'w-36'}`}/>
                             <p className={`text-base md:text-2xl text-center hidden  ${arrowState ? 'md:hidden':' md:block'}`}>Santa Ana</p>
                         </div>
                     </Link>
