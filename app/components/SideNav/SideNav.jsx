@@ -11,13 +11,13 @@ export default function SideNav () {
     const arrowState = useSelector(selectArrowSideNav);
     const dispatch = useDispatch();
     return (
-        <div className={`flex items-center w-full  ${arrowState ? 'md:w-28' : 'md:w-72'}`}>
+        <div className={`flex items-center w-full transition-all duration-300 ${arrowState ? 'md:w-[85px]' : 'md:w-72'}`}>
             <div className="flex flex-grow h-full flex-col px-3 py-4 md:px-2 bg-gray-300 dark:bg-slate-600 ">
-                <div className='mb-2  rounded-md bg-green-400 p-2 flex justify-center'>
+                <div className='mb-2  rounded-md bg-green-400  flex justify-center items-center h-32'>
                     <Link  href="/">
-                        <div className={` flex flex-col justify-center items-center leading-none text-white`}>
-                            <Image src={'/logoSantaAna.png'} priority width={400} height={240}  alt='logo-ingenio'  className={`${arrowState ? 'w-12 h-10':' w-28 h-20 '}`}/>
-                            <p className={`text-[16px] md:text-[36px] text-center hidden ${arrowState ? 'hidden':'md:block '}`}>Santa Ana</p>
+                        <div className={` flex flex-col justify-center items-center leading-none text-white  `}>
+                            <Image src={'/logoSantaAna.png'} priority width={150} height={100}  alt='logo-ingenio'  className={`${arrowState ? 'md:w-16 ':'w-36'}`}/>
+                            <p className={`text-base md:text-2xl text-center hidden  ${arrowState ? 'md:hidden':' md:block'}`}>Santa Ana</p>
                         </div>
                     </Link>
                 </div>
@@ -27,7 +27,7 @@ export default function SideNav () {
                     <form>
                         <button className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-100  p-3 text-sm font-medium text-gray-600 dark:bg-black hover:bg-slate-400  md:flex-none md:justify-start md:p-2 md:px-3">
                             <PowerIcon className="w-6 " />
-                            <div className={`hidden ${arrowState ? 'hidden':'md:block '}`}>Sign Out</div>
+                            <div className={`hidden ${arrowState ? 'md:hidden':'md:block '}`}>Sign Out</div>
                         </button>
                     </form>
                 </div>

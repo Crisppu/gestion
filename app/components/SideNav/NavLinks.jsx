@@ -27,7 +27,7 @@ export default function NavLinks({useSelectorArrow}) {
                         }
                     >
                         <LinkIcon className="w-6" />
-                        <p className={`hidden ${useSelectorArrow ? 'hidden':'md:block '}`}>{link.name}</p>
+                        <p className={`hidden transition-all duration-300 ${useSelectorArrow ? 'hidden':'md:block '}`}>{link.name}</p>
                     </Link>
                 );
             })

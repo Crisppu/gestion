@@ -11,7 +11,7 @@ import { thunk } from "redux-thunk";
 const persistConfig ={
     key:'root',
     storage,
-    whitelist:['counterState','darkModeState']
+    whitelist:['counterState','darkModeState'],
 }
 const rootReducer = combineReducers({
     counterState: counterReducer,
