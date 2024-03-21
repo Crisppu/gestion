@@ -6,15 +6,13 @@ import { persistStore } from 'redux-persist';
 
 var persistor = persistStore(store);
 export function Providers({children}) {
-  return (
-    <PersistGate persistor={persistor}>
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-        {children}
-        </PersistGate>
-      </Provider>
-    </PersistGate>
-  )
+    return (
+        <Provider store={store}>
+          <PersistGate persistor={persistor}>
+          {children}
+          </PersistGate>
+        </Provider>
+    )
 }
 
 export default Providers
