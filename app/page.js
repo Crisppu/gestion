@@ -2,9 +2,9 @@
 import { selectDarkMode} from "@/redux/features/darkModeSlice";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-import ButtonDarkMode from "./components/ui/buttonDarkMode";
-import FormLogin from "./components/ui/Form-Login";
-import NavBar from "./components/NavBar/NavBar";
+import ButtonDarkMode from "../components/ui/buttonDarkMode";
+import FormLogin from "../components/ui/Form-Login";
+import NavBar from "../components/NavBar/NavBar";
 
 
 export default function Home() {

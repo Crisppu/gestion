@@ -1,8 +1,8 @@
 'use client'
 import { selectDarkMode} from "@/redux/features/darkModeSlice";
 import { useSelector } from "react-redux";
-import SideNav from "../components/SideNav/SideNav";
-import NavBar from "../components/NavBar/NavBar";
+import SideNav from "../../components/SideNav/SideNav";
+import NavBar from "../../components/NavBar/NavBar";
 
 
 

@@ -1,4 +1,4 @@
-import ButtonDarkMode from "@/app/components/ui/buttonDarkMode";
+import ButtonDarkMode from "@/components/ui/buttonDarkMode";
 
 export default function NavBar() {
     return (
