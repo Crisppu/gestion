@@ -14,15 +14,15 @@ export default function Home() {
 // Pagina
     return (
         <main className={`flex min-h-screen ${modeSelector} flex-col  dark:bg-black transition-colors duration-500`}>
-            <div className="flex justify-end my-2 h-20 pr-2 shrink-0 items-center rounded-lg bg-green-400  md:h-[100px] ">
+            {/* <div className="flex justify-end my-2 h-20 pr-2 shrink-0 items-center rounded-lg bg-green-400  md:h-[100px] "> */}
                 {/* <div className="flex">
                     <div className="flex justify-center items-center p-1">
                         <span className="text-xl">Enrique</span>
                     </div>
                     <ButtonDarkMode mode={modeSelector}></ButtonDarkMode>
                 </div> */}
-                <NavBar></NavBar>
-            </div>
+                {/* <NavBar></NavBar> */}
+            {/* </div> */}
             <div className={'flex justify-evenly items-center pt-3 '}>
                 <FormLogin></FormLogin>
                 <div className="flex items-center justify-center md:w-3/5 md:px-28 ">
