@@ -1,3 +1,7 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    // esta regla me permite hacer uso del la etiqueta ej.<img src={url}>
+    "@next/next/no-img-element": "off"
+  }
 }
