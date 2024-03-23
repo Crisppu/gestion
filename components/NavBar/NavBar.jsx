@@ -19,7 +19,7 @@ export default function NavBar() {
                             <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-300">
                                 <img src={session.user.image} alt="Avatar"  className="w-12 h-12 rounded-full" />
                             </div>
-                            <button onClick={()=>signOut()} className="dark:bg-slate-600 bg-gray-200 border-2 dark:border-slate-700 border-gray-300 rounded-lg dark:text-white text-black px-6 py-3 text-base dark:hover:border-white hover:border-black cursor-pointer transition">
+                            <button onClick={async()=> await signOut({callbackUrl:'/'})} className="dark:bg-slate-600 bg-gray-200 border-2 dark:border-slate-700 border-gray-300 rounded-lg dark:text-white text-black px-6 py-3 text-base dark:hover:border-white hover:border-black cursor-pointer transition">
                                 Sing out
                             </button>
                         </div>
