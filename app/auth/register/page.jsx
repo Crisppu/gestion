@@ -1,8 +1,6 @@
-'use client'
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useState } from "react";
-import { useRouter } from 'next/navigation';
+
 const registerSchema = Yup.object().shape(
     //shape: nos va permitir especificar la estructura de ese objeto
     {
@@ -26,7 +24,6 @@ const registerSchema = Yup.object().shape(
 
 
 export default function FormRegister() {
-    const router = useRouter()//pendiente
     const initialRegister = {
         username:'',
         email:'',
