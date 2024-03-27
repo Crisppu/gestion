@@ -4,16 +4,16 @@ import { useState } from "react";
 import { useRouter } from 'next/navigation';
 const loginSchema = Yup.object().shape(
     //shape: nos va permitir especificar la estructura de ese objeto
-  {
-      email: Yup.string()
-      .email('Invalid email format')
-      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,'el correo no es valido')
-      .required('email is required'),
+    {
+        email: Yup.string()
+        .email('Invalid email format')
+        .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,'el correo no es valido')
+        .required('email is required'),
 
-      password: Yup.string()
-      .min(4, 'Password should be of minimum 8 characters length')
-      .required('Password is required')
-  }
+        password: Yup.string()
+        .min(4, 'Password should be of minimum 8 characters length')
+        .required('Password is required')
+    }
 )
 
 
