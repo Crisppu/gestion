@@ -49,7 +49,7 @@ export default function Page() {
                         /** Yup validations schema */
                         validationSchema={loginSchema}
                         /*onSubmit Event */
-                        onSubmit = {async (values,{resetForm}) =>
+                        onSubmit = {async (values,actions) =>
                             {
                                 await new Promise((r) =>{
                                     console.log(r)
@@ -57,7 +57,7 @@ export default function Page() {
                                 });
                                 // alert(JSON.stringify(values, null, 2));
                                 valida(values)
-                                resetForm(); //para limpiar el formulario
+                                actions.resetForm(); //para limpiar el formulario
                                 actions.setSubmitting(false);
                                 // navigateHistory('/profile');
                             }

@@ -7,9 +7,15 @@ export async function insertarRegistro(userData) {
     try {
         const hashedPassword = await bcrypt.hash(userData.password, 10);
         const response = await sql`
-        INSERT INTO users (name, email, password) VALUES (${userData.username},${userData.email},${hashedPassword});`;
-        console.log('usuario registrado');
-        return response
+        INSERT INTO users (name, email, password) VALUES (${userData.username},${userData.email},${hashedPassword}) RETURNING *;`;
+
+        const bypassPassword = response.rows.map(row =>{
+            const { password, ...user} = row; // Utilizando destructuring para excluir el campo 'password'
+            return user;
+        })
+        console.log(bypassPassword);
+
+        return bypassPassword
     } catch (error) {
         // manejar errores de solicitud
         console.error('Error al realizar la solicitud:', error.message);

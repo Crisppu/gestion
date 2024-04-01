@@ -65,7 +65,7 @@ export default function Page() {
                         /** Yup validations schema */
                         validationSchema={registerSchema}
                         /*onSubmit Event */
-                        onSubmit = {async (values,{resetForm}) =>
+                        onSubmit = {async (values,actions) =>
                             {
                                 await new Promise((r) =>{
                                     return setTimeout(r, 2000)
@@ -83,7 +83,7 @@ export default function Page() {
 
                                 }
 
-                                // resetForm(); //para limpiar el formulario
+                                // actions.resetForm(); //para limpiar el formulario
                                 actions.setSubmitting(false);
                                 // navigateHistory('/profile');
                             }
@@ -136,6 +136,7 @@ export default function Page() {
                                 )}
                                 <label htmlFor="confirm" className="block text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">confirm</label>
                                 <Field
+                                    autoComplete="new-password"
                                     id="confirm"
                                     name="confirm"
                                     placeholder="confirm password"
