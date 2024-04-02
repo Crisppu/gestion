@@ -21,7 +21,7 @@ export default function Home() {
                 <FormLogin></FormLogin>
                 <div className="flex items-center justify-center md:w-3/5 md:px-28 ">
                     {/* *Add Hero Images Here* */}
-                    <Image className='hidden md:block' src='/hero-desktop.png' width={1000} height={760} alt='screenShots dashboard'></Image>
+                    <Image className='hidden md:block' src='/hero-desktop.png' width={1000} height={760} alt='screenShots dashboard' priority="high"></Image>
                     <Image className='block md:hidden' src='/hero-mobile.png' width={560} height={620} alt='screenShots dashboard'></Image>
                 </div>
             </div>

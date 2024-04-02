@@ -1,5 +1,5 @@
 'use client'
-import { findUniqueEmail, insertarRegistro } from '@/app/api/auth/register/route';
+import { findUniqueEmail, insertarRegistro } from '@/app/libs/data';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { useRouter } from 'next/navigation';
@@ -69,21 +69,18 @@ export default function Page() {
                             {
                                 await new Promise((r) =>{
                                     return setTimeout(r, 2000)
-                                });
+                                })
 
-                                if(values.password !== values.confirm){
-                                    alert('password does not match')
-                                }
                                 const response = await findUniqueEmail(values.email);
                                 if(response.rows.length > 0){
                                     alert('este correo ya esta registrado')
                                 }else{
                                     await insertarRegistro(values);
+                                    actions.resetForm(); //para limpiar el formulario
                                     router.push('/auth/login');
 
                                 }
 
-                                // actions.resetForm(); //para limpiar el formulario
                                 actions.setSubmitting(false);
                                 // navigateHistory('/profile');
                             }
@@ -152,7 +149,7 @@ export default function Page() {
                                     <a className="text-sm text-green-400" href="#">¿Ya tiene una cuenta? Iniciar sesion</a>
                                 </div>
                                 <button disabled={!isValid || !dirty} type="submit" className={`${!isValid || !dirty ? '':'hover:bg-green-300'} bg-green-400  transition-colors duration-300 w-max m-auto px-6 py-2 rounded text-white text-sm font-normal`}>Login</button>
-                                {isSubmitting ? (<p className={'text-black dark:text-white'}>login your credential</p>) : null}
+                                {isSubmitting ? (<p className={'text-black dark:text-white'}>Registering...</p>) : null}
                             </Form>
                         )}
 

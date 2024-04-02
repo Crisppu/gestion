@@ -1,16 +1,6 @@
 'use server'
 import { sql } from '@vercel/postgres';
-// import {
-//   CustomerField,
-//   CustomersTableType,
-//   InvoiceForm,
-//   InvoicesTable,
-//   LatestInvoiceRaw,
-//   User,
-//   Revenue,
-// } from './definitions';
-//para type js
-// import { formatCurrency } from './utils'; //logica aparte
+import bcrypt from 'bcrypt'
 
 export async function getUser(email) {
     try {
@@ -32,23 +22,41 @@ export async function getUserAll() {
       throw new Error('Failed to fetch user.');
     }
 }
-export async function fetchRevenue() {
-  // Add noStore() here to prevent the response from being cached.
-  // This is equivalent to in fetch(..., {cache: 'no-store'}).
 
+// Funcion para insertar un nuevo registro en la tabla
+export async function insertarRegistro(userData) {
     try {
-        // Artificially delay a response for demo purposes.
-        // Don't do this in production :)
+        console.log(userData)
+        const hashedPassword = await bcrypt.hash(userData.password, 10);
+        const response = await sql`
+        INSERT INTO users (name, email, password) VALUES (${userData.username},${userData.email},${hashedPassword}) RETURNING *;`;
 
-        // console.log('Fetching revenue data...');
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        const bypassPassword = response.rows.map(row =>{
+            const { password, ...user} = row; // Utilizando destructuring para excluir el campo 'password'
+            return user;
+        })
+        console.log(bypassPassword);
 
-        const data = await sql`SELECT * FROM revenue`; //revenue-ingresos
-
-        // console.log('Data fetch completed after 3 seconds.');
-        return data.rows;
+        return bypassPassword
     } catch (error) {
-        console.error('Database Error:', error);
-        throw new Error('Failed to fetch revenue data.');
+        // manejar errores de solicitud
+        console.error('Error al realizar la solicitud:', error.message);
+        // Lanzar un nuevo error con más contexto
+        throw new Error('Hubo un problema al realizar la solicitud un nuevo registro de usuario');
+
+    }
+}
+
+export async function findUniqueEmail(email) {
+    try {
+        const response = await sql`
+            SELECT * FROM users WHERE email = ${email}`;
+            return response
+    } catch (error) {
+        // Manejar errores de solicitud
+        console.error('Error al realizar la solicitud:', error.message);
+
+        // Lanzar un nuevo error con más contexto
+        throw new Error('Hubo un problema al realizar la solicitud de verificacion de correo');
     }
 }
