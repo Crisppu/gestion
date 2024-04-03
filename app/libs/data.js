@@ -26,7 +26,7 @@ export async function getUserAll() {
 // Funcion para insertar un nuevo registro en la tabla
 export async function insertarRegistro(userData) {
     try {
-        console.log(userData)
+        // console.log(userData)
         const hashedPassword = await bcrypt.hash(userData.password, 10);
         const response = await sql`
         INSERT INTO users (name, email, password) VALUES (${userData.username},${userData.email},${hashedPassword}) RETURNING *;`;
@@ -35,7 +35,7 @@ export async function insertarRegistro(userData) {
             const { password, ...user} = row; // Utilizando destructuring para excluir el campo 'password'
             return user;
         })
-        console.log(bypassPassword);
+        // console.log(bypassPassword);
 
         return bypassPassword
     } catch (error) {

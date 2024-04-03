@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
+import { signIn } from 'next-auth/react';
+
 const loginSchema = Yup.object().shape(
     //shape: nos va permitir especificar la estructura de ese objeto
     {
@@ -21,20 +23,14 @@ const loginSchema = Yup.object().shape(
 
 
 export default function Page() {
-    const [usuario, setUsuario] = useState({email:'perroMon@gmail.com',password:'1234'});
+    const [error, setError] = useState(null);
     const modeSelector = useSelector(selectDarkMode);
-
-    const router = useRouter()
+    const route = useRouter();
     const initialCredentials = {
         email:'',
         password:''
     }
-    const valida = (values) =>{
-        console.log(values)
-        if(usuario.email === values.email && usuario.password === values.password){
-            router.push('/dashboard')
-        }
-    }
+    
 
     return (
         <div className={`flex justify-center items-center min-h-screen ${modeSelector} dark:bg-black`}>
@@ -42,7 +38,7 @@ export default function Page() {
                 <div className={'flex flex-col bg-white dark:bg-black p-8 rounded-md transition-colors duration-500'}>
                     <div className="text-2xl font-bold mb-2 text-[#1e0e4b] dark:text-white text-center">Welcome back to <span className="text-green-400">App</span></div>
                     <div className="text-sm font-normal mb-4 text-center text-[#1e0e4b] dark:text-white">Log in to your account</div>
-
+                    {error && (<p className='bg-red-500'>{error}</p>)}
                     <Formik
                         /* Initial values that the form will take */
                         initialValues = {initialCredentials}
@@ -51,15 +47,19 @@ export default function Page() {
                         /*onSubmit Event */
                         onSubmit = {async (values,actions) =>
                             {
-                                await new Promise((r) =>{
-                                    console.log(r)
-                                    return setTimeout(r, 2000)
-                                });
-                                // alert(JSON.stringify(values, null, 2));
-                                valida(values)
-                                actions.resetForm(); //para limpiar el formulario
+                                const response = await signIn('credentials',{
+                                    email:values.email,
+                                    password:values.password,
+                                    redirect:false
+                                })
+                                if(response.error){
+                                    // alert(JSON.stringify(response.error, null, 2));
+                                    setError(response.error)
+                                }else{
+                                    actions.resetForm();
+                                    route.push('/dashboard');
+                                }
                                 actions.setSubmitting(false);
-                                // navigateHistory('/profile');
                             }
                         }
                     >
@@ -98,7 +98,7 @@ export default function Page() {
                                         <a className="text-sm text-green-400" href="#">Forgot your password?</a>
                                     </div>
                                     <button disabled={!isValid || !dirty} type="submit" className={`${!isValid || !dirty ? '':'hover:bg-green-300'} bg-green-400  transition-colors duration-300 w-max m-auto px-6 py-2 rounded text-white text-sm font-normal`}>Login</button>
-                                    {isSubmitting ? (<p className={'text-black dark:text-white'}>login your credential</p>) : null}
+                                    {isSubmitting ? (<p className={'text-black dark:text-white'}>login your credential...</p>) : null}
                                 </Form>
                             )
                         }
