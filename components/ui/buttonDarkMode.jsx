@@ -1,3 +1,5 @@
+'use client'
+
 import { selectDarkMode, setMode } from "@/redux/features/darkModeSlice";
 import { useDispatch, useSelector} from "react-redux";
 

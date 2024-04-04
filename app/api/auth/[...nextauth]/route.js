@@ -6,7 +6,7 @@ import { findUniqueEmail } from "@/app/libs/data";
 import bcrypt from 'bcrypt'
 
 
-const authOptions = {
+export const authOptions = {
     providers:[
         CredentialsProvider(
             {
