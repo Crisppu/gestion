@@ -148,7 +148,7 @@ export default function Page() {
                                 <div>
                                     <a className="text-sm text-green-400" href="#">¿Ya tiene una cuenta? Iniciar sesion</a>
                                 </div>
-                                <button disabled={!isValid || !dirty} type="submit" className={`${!isValid || !dirty ? '':'hover:bg-green-300'} bg-green-400  transition-colors duration-300 w-max m-auto px-6 py-2 rounded text-white text-sm font-normal`}>Login</button>
+                                <button disabled={!isValid || !dirty} type="submit" className={`${!isValid || !dirty ? '':'hover:bg-green-300'} bg-green-400  transition-colors duration-300 w-max m-auto px-6 py-2 rounded text-white text-sm font-normal`}>Register</button>
                                 {isSubmitting ? (<p className={'text-black dark:text-white'}>Registering...</p>) : null}
                             </Form>
                         )}

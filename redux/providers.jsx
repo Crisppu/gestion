@@ -8,7 +8,6 @@ import { SessionProvider } from 'next-auth/react';
 var persistor = persistStore(store);
 export function Providers({children}) {
     return (
-        
         <Provider store={store}>
             <PersistGate persistor={persistor}>
                 <SessionProvider>
@@ -16,7 +15,6 @@ export function Providers({children}) {
                 </SessionProvider>
             </PersistGate>
         </Provider>
-
     )
 }
 

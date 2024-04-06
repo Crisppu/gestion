@@ -58,6 +58,7 @@ export default function Page() {
                                 }else{
                                     actions.resetForm();
                                     route.push('/dashboard');
+                                    route.refresh();
                                 }
                                 actions.setSubmitting(false);
                             }

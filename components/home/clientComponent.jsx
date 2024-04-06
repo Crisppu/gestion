@@ -11,6 +11,7 @@ export default function ClientComponent({children}) {
                 {children}
             </div>
             <div className={'flex justify-evenly items-center pt-3 '}>
+                <p className={'dark:text-white text-black'}>contenido del home</p>
                 {/* <FormLogin></FormLogin> */}
                 <div className="flex items-center justify-center md:w-3/5 md:px-28 ">
                     {/* *Add Hero Images Here* */}
