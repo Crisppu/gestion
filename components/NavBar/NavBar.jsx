@@ -24,7 +24,7 @@ export default async function NavBar() {
                         <>
                             <li><Link href={'/'}>Home</Link></li>
                             <li><Link href={'/dashboard'}>Dashboard</Link></li>
-                            <li><Link href={'/api/auth/signout'}>Logout</Link></li>
+                            <li><Link href={'/auth/logout'}>Logout</Link></li>
                         </>
                     )
 
