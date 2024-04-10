@@ -11,7 +11,7 @@ module.exports = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":"conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        'gradient-over-imgCaneField': "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/caneField.webp')"
+        'gradient-over-imgCaneField': "linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/img/caneField.webp')"
 
       },
       height: {
