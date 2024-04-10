@@ -9,7 +9,7 @@ export default async function NavBar() {
     const session = await getServerSession(authOptions)
 
     return (
-        <div className={`flex justify-end items-center h-full pr-2 shrink-0  bg-green-400 `}>
+        <div className={`flex justify-end items-center h-full pr-2 shrink-0`} >
             <div className="flex items-center space-x-1">
                 <ul className="flex gap-x-2">
                     { !session?.user ?
