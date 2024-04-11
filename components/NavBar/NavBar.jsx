@@ -9,7 +9,7 @@ export default async function NavBar() {
     const session = await getServerSession(authOptions);
 
     return (
-        <div className={`flex justify-end items-center h-full pr-2 shrink-0`} >
+        <div className={`flex justify-center items-center h-full pr-2 shrink-0`} >
             <div className="flex items-center space-x-4">
                 <ul className="flex gap-x-4">
                     <li className="hover:overline decoration-4 font-medium"><Link href={'/'}>Home</Link></li>
