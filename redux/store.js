@@ -30,7 +30,7 @@ const storage = typeof window !== 'undefined' ? createWebStorage('local') : crea
 const persistConfig ={
     key:'root',
     storage,
-    whitelist:['counterState','darkModeState'],
+    whitelist:['counterState','darkModeState','arrowSideNavState'],
 }
 const rootReducer = combineReducers({
     counterState: counterReducer,
