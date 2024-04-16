@@ -1,10 +1,14 @@
-import ClientComponent from "@/components/home/clientComponent";
 import ServerComponent from "@/components/home/serverComponent";
+import { redirect} from "next/navigation";
+import { getSessionNextAuth } from "@/app/api/auth/[...nextauth]/getSessionAsync";
+import ClientComponent from "@/components/home/clientComponent";
 
+export default async function Home() {
+    const response = await getSessionNextAuth();
+    if(response?.user){
+        redirect('/dashboard')
+    }
 
-export default function Home() {
-
-// Pagina
     return (
         <ClientComponent>
             <ServerComponent></ServerComponent>
