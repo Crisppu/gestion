@@ -1,5 +1,5 @@
 'use client'
-import { findUniqueEmail, insertarRegistro } from '@/app/libs/data';
+import { findUniqueEmail, createUserBD } from '@/app/libs/data';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { useRouter } from 'next/navigation';
@@ -41,18 +41,6 @@ export default function Page() {
         // roles:'pendiente'
 
     }
-    // const enviarData = async (values)=>{
-    //     console.log(values)
-    //     if(values.password !== values.confirm){
-    //         alert('password does not match')
-    //     }
-    //     const resolve = await insertarRegistro({
-    //         name: values.username,
-    //         email:values.email,
-    //         password: values.password
-    //     });
-    //     console.log(resolve)
-    // }
 
     return (
         <div className={`flex justify-center items-center min-h-screen ${modeSelector} dark:bg-black`}>
@@ -75,7 +63,7 @@ export default function Page() {
                                 if(response.rows.length > 0){
                                     alert('este correo ya esta registrado')
                                 }else{
-                                    await insertarRegistro(values);
+                                    await createUserBD(values);
                                     actions.resetForm(); //para limpiar el formulario
                                     router.push('/auth/login');
 
