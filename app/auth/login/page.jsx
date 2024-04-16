@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
 import { signIn } from 'next-auth/react';
+import Link from 'next/link';
 
 const loginSchema = Yup.object().shape(
     //shape: nos va permitir especificar la estructura de ese objeto
@@ -36,6 +37,7 @@ export default function Page() {
         <div className={`flex justify-center items-center min-h-screen ${modeSelector} dark:bg-black`}>
             <div className={'flex justify-center items-center bg-gray-200 dark:bg-slate-600 p-6 rounded-lg transition-colors duration-500'}>
                 <div className={'flex flex-col bg-white dark:bg-black p-8 rounded-md transition-colors duration-500'}>
+                    <div className='flex justify-center'><Link href={'/'}><img src='/logoSantaAna.png' alt='logo Santa Ana' className={'w-40 h-24'}></img></Link></div>
                     <div className="text-2xl font-bold mb-2 text-[#1e0e4b] dark:text-white text-center">Welcome back to <span className="text-green-400">App</span></div>
                     <div className="text-sm font-normal mb-4 text-center text-[#1e0e4b] dark:text-white">Log in to your account</div>
                     {error && (<p className='bg-red-500'>{error}</p>)}
