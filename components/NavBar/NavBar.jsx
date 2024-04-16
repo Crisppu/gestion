@@ -1,12 +1,12 @@
 import ButtonDarkMode from "@/components/ui/buttonDarkMode";
 import Link from "next/link";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getSessionNextAuth } from "@/app/api/auth/[...nextauth]/getSessionAsync";
 
 
 export default async function NavBar() {
 
-    const session = await getServerSession(authOptions);
+    const session = await getSessionNextAuth();
+
 
     return (
         <div className={`flex justify-center items-center h-full pr-2 shrink-0`} >
