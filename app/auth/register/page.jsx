@@ -2,6 +2,7 @@
 import { findUniqueEmail, createUserBD } from '@/app/libs/data';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 
@@ -44,7 +45,7 @@ export default function Page() {
 
     return (
         <div className={`flex justify-center items-center min-h-screen ${modeSelector} dark:bg-black`}>
-            <div className={'flex justify-center h-1/2  items-center bg-gray-200 dark:bg-slate-600 p-6 rounded-lg transition-colors duration-500'}>
+            <div className={'flex justify-center h-1/2  items-center bg-gray-200 dark:bg-slate-600 p-4 rounded-lg transition-colors duration-500'}>
                 <div className={'flex flex-col bg-white w-96 dark:bg-black p-8 rounded-md transition-colors duration-500'}>
                     <div className="text-2xl font-bold mb-2 text-[#1e0e4b] dark:text-white text-center">Register</div>
                     <Formik
@@ -77,66 +78,66 @@ export default function Page() {
                         {({ errors, touched, isSubmitting, handleSubmit, isValid, dirty}) =>
                         (
                             <Form className={'flex flex-col '} onSubmit={handleSubmit}>
-                                <label  htmlFor='username' className="block text-gray-600 cursor-text text-base leading-[140%] font-normal mb-2">Username</label>
+                                <label  htmlFor='username' className="block text-gray-500 cursor-text text-base font-semibold mb-2">Username</label>
                                 <Field
                                     autoComplete="username"
                                     id='username'
                                     name='username'
                                     placeholder='username'
                                     type='text'
-                                    className="rounded border border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 ></Field>
                                 {errors.username && touched.username && (
-                                    <div className='text-red-700'>
+                                    <div className='text-red-700 text-sm'>
                                         <ErrorMessage name='username'></ErrorMessage>
                                     </div>
                                 )}
-                                <label htmlFor="email" className="block text-gray-600 cursor-text text-base leading-[140%] font-normal mb-2">Email</label>
+                                <label htmlFor="email" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Email</label>
                                 <Field
                                     autoComplete="email"
                                     id="email"
                                     name="email"
                                     placeholder="example@email.com"
                                     type='email'
-                                    className="rounded border border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.email && touched.email && (
-                                    <div className='text-red-700'>
+                                    <div className='text-red-700 text-sm'>
                                         <ErrorMessage name='email'></ErrorMessage>
                                     </div>
                                 )}
-                                <label  htmlFor="password" className="block text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">Password</label>
+                                <label  htmlFor="password" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Password</label>
                                 <Field
                                     autoComplete="current-password"
                                     id="password"
                                     name="password"
                                     placeholder="password"
                                     type="password"
-                                    className="rounded border border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.password && touched.password && (
-                                    <div className='text-red-700'>
+                                    <div className='text-red-700 text-sm'>
                                         <ErrorMessage name='password'></ErrorMessage>
                                     </div>
                                 )}
-                                <label htmlFor="confirm" className="block text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">confirm</label>
+                                <label htmlFor="confirm" className="block text-gray-500 cursor-text text-base font-semibold mb-2">confirm</label>
                                 <Field
                                     autoComplete="new-password"
                                     id="confirm"
                                     name="confirm"
                                     placeholder="confirm password"
                                     type="password"
-                                    className="rounded border border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.confirm && touched.confirm && (
-                                    <div className='text-red-700'>
+                                    <div className='text-red-700 text-sm'>
                                         <ErrorMessage name='confirm'></ErrorMessage>
                                     </div>
                                 )}
-                                <div>
-                                    <a className="text-sm text-green-400" href="#">¿Ya tiene una cuenta? Iniciar sesion</a>
+                                <div className='flex flex-col pt-2 gap-2'>
+                                    <Link href="/auth/login" className="text-sm text-green-400"><p>¿Ya tiene una cuenta? Iniciar sesion</p></Link>
+                                    <button disabled={!isValid || !dirty} type="submit" className={`${!isValid || !dirty ? '':'hover:bg-green-300'} bg-green-400  transition-colors duration-300 w-max m-auto px-6 py-2 rounded text-white text-sm font-normal`}>Register</button>
                                 </div>
-                                <button disabled={!isValid || !dirty} type="submit" className={`${!isValid || !dirty ? '':'hover:bg-green-300'} bg-green-400  transition-colors duration-300 w-max m-auto px-6 py-2 rounded text-white text-sm font-normal`}>Register</button>
                                 {isSubmitting ? (<p className={'text-black dark:text-white'}>Registering...</p>) : null}
                             </Form>
                         )}
