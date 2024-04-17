@@ -10,8 +10,8 @@ export default function ClientComponent({children}) {
     return (
         <main className={`flex min-h-full flex-col  dark:bg-black transition-colors duration-500 ${modeSelector}  `}>
             <div className={`bg-gradient-over-imgCaneField h-screen bg-cover bg-center `}>
-                <div className="flex justify-between h-20 pr-2 shrink-0 items-center  bg-green-400 md:h-[100px] ">
-                    <img src={'/logoSantaAna.png'} alt='logoSantaAna' width={100} height={100}></img>
+                <div className="flex justify-between h-20 pr-2 shrink-0 items-center  bg-green-400 md:h-[100px]">
+                    <div className="pl-2"><img src={'/logoSantaAna.png'} alt='logoSantaAna' width={60} height={60}></img></div>
                     {children}
                 </div>
                 <div className={'flex flex-col justify-center items-center gap-6 pt-3 w-full h-vh-minus-100px'}>

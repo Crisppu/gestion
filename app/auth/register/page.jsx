@@ -47,6 +47,8 @@ export default function Page() {
         <div className={`flex justify-center items-center min-h-screen ${modeSelector} dark:bg-black`}>
             <div className={'flex justify-center h-1/2  items-center bg-gray-200 dark:bg-slate-600 p-4 rounded-lg transition-colors duration-500'}>
                 <div className={'flex flex-col bg-white w-96 dark:bg-black p-8 rounded-md transition-colors duration-500'}>
+                <div className='flex justify-center'><Link href={'/'}><img src='/logoSantaAna.png' alt='logo Santa Ana' width={60} height={60}></img></Link></div>
+
                     <div className="text-2xl font-bold mb-2 text-[#1e0e4b] dark:text-white text-center">Register</div>
                     <Formik
                         /* Initial values that the form will take */
