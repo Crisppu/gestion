@@ -35,7 +35,7 @@ export default function Page() {
 
     return (
         <div className={`flex justify-center items-center min-h-screen ${modeSelector} dark:bg-black`}>
-            <div className={'flex justify-center items-center bg-gray-200 dark:bg-slate-600 p-6 rounded-lg transition-colors duration-500'}>
+            <div className={'flex justify-center items-center bg-gray-200 dark:bg-slate-600 p-4 rounded-lg transition-colors duration-500'}>
                 <div className={'flex flex-col bg-white dark:bg-black p-8 rounded-md transition-colors duration-500'}>
                     <div className='flex justify-center'><Link href={'/'}><img src='/logoSantaAna.png' alt='logo Santa Ana' className={'w-40 h-24'}></img></Link></div>
                     <div className="text-2xl font-bold mb-2 text-[#1e0e4b] dark:text-white text-center">Welcome back to <span className="text-green-400">App</span></div>
@@ -69,7 +69,7 @@ export default function Page() {
                         {({ errors, touched, isSubmitting, handleSubmit, isValid, dirty}) =>
                             (
                                 <Form className={'flex flex-col '} onSubmit={handleSubmit}>
-                                    <label htmlFor="email" className="block text-gray-600 cursor-text text-base leading-[140%] font-normal mb-2">email</label>
+                                    <label htmlFor="email" className="block text-gray-500 cursor-text text-base font-semibold mb-2">E-mail</label>
                                     <Field
                                         autoComplete="email"
                                         id="email"
@@ -79,11 +79,11 @@ export default function Page() {
                                         className="rounded border border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
                                     {errors.email && touched.email && (
-                                        <div className='errors text-red-700'>
+                                        <div className='text-red-700 text-sm'>
                                             <ErrorMessage name='email'></ErrorMessage>
                                         </div>
                                     )}
-                                    <label  htmlFor="password" className="block text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">password</label>
+                                    <label  htmlFor="password" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Password</label>
                                     <Field
                                         autoComplete="current-password"
                                         id="password"
@@ -93,14 +93,14 @@ export default function Page() {
                                         className="rounded border border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
                                     {errors.password && touched.password && (
-                                        <div className='errors text-red-700'>
+                                        <div className='text-red-700 text-sm'>
                                             <ErrorMessage name='password'></ErrorMessage>
                                         </div>
                                     )}
-                                    <div>
+                                    <div className='flex flex-col pt-2 gap-2'>
                                         <a className="text-sm text-green-400" href="#">Forgot your password?</a>
+                                        <button disabled={!isValid || !dirty} type="submit" className={`${!isValid || !dirty ? '':'hover:bg-green-300'} bg-green-400  transition-colors duration-300 w-max m-auto px-6 py-2 rounded text-white text-sm font-normal`}>Login</button>
                                     </div>
-                                    <button disabled={!isValid || !dirty} type="submit" className={`${!isValid || !dirty ? '':'hover:bg-green-300'} bg-green-400  transition-colors duration-300 w-max m-auto px-6 py-2 rounded text-white text-sm font-normal`}>Login</button>
                                     {isSubmitting ? (<p className={'text-black dark:text-white'}>login your credential...</p>) : null}
                                 </Form>
                             )

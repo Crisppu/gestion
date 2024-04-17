@@ -92,7 +92,7 @@ export default function Page() {
                                         <ErrorMessage name='username'></ErrorMessage>
                                     </div>
                                 )}
-                                <label htmlFor="email" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Email</label>
+                                <label htmlFor="email" className="block text-gray-500 cursor-text text-base font-semibold mb-2">E-mail</label>
                                 <Field
                                     autoComplete="email"
                                     id="email"
