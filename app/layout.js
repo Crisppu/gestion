@@ -1,10 +1,9 @@
-import { Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Providers from "@/redux/providers";
-import NavBar from "@/components/NavBar/NavBar";
 
 
-const inter = Inter({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Santa Ana",
@@ -17,7 +16,7 @@ export default function RootLayout({ children}) {
     <head>
         <link rel="icon" href="/img/icons8-cane.png" />
     </head>
-      <body>
+      <body className={montserrat.className}>
         <Providers>
           {children}
         </Providers>
