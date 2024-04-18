@@ -87,7 +87,7 @@ export default function Page() {
                                     name='username'
                                     placeholder='username'
                                     type='text'
-                                    className="rounded border-2 border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200  text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 ></Field>
                                 {errors.username && touched.username && (
                                     <div className='text-red-700 text-sm'>
@@ -101,7 +101,7 @@ export default function Page() {
                                     name="email"
                                     placeholder="example@email.com"
                                     type='email'
-                                    className="rounded border-2 border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200 w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.email && touched.email && (
                                     <div className='text-red-700 text-sm'>
@@ -115,7 +115,7 @@ export default function Page() {
                                     name="password"
                                     placeholder="password"
                                     type="password"
-                                    className="rounded border-2 border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200 w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.password && touched.password && (
                                     <div className='text-red-700 text-sm'>
@@ -129,7 +129,7 @@ export default function Page() {
                                     name="confirm"
                                     placeholder="confirm password"
                                     type="password"
-                                    className="rounded border-2 border-gray-200  text-sm w-full font-normal leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200 w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.confirm && touched.confirm && (
                                     <div className='text-red-700 text-sm'>
