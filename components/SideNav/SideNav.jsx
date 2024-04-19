@@ -5,8 +5,6 @@ import { ChevronDoubleRightIcon} from '@heroicons/react/24/outline';
 import { selectArrowSideNav, setArrowSideNav } from '@/redux/features/arrowSideNavSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Image from 'next/image';
-
 export default function SideNav () {
     const arrowState = useSelector(selectArrowSideNav);
     const dispatch = useDispatch();
@@ -16,7 +14,7 @@ export default function SideNav () {
                 <div className='mb-2  rounded-md bg-green-400  flex justify-center items-center h-32'>
                     <Link  href="#">
                         <div className={` flex flex-col justify-center items-center leading-none text-white  `}>
-                            <Image src={'/logoSantaAna.png'} priority width={60} height={60}  alt='logo-ingenio'/>
+                            <img src={'/logoSantaAna.png'} alt='logoSantaAna' width={60} height={60}></img>
                             <p className={`text-base md:text-2xl text-center hidden  ${arrowState ? 'md:hidden':' md:block'}`}>Santa Ana</p>
                         </div>
                     </Link>
