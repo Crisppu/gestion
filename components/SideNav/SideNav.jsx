@@ -16,7 +16,7 @@ export default function SideNav () {
                 <div className='mb-2  rounded-md bg-green-400  flex justify-center items-center h-32'>
                     <Link  href="#">
                         <div className={` flex flex-col justify-center items-center leading-none text-white  `}>
-                            <Image src={'/logoSantaAna.png'} priority width={150} height={100}  alt='logo-ingenio'  className={`${arrowState ? 'md:w-14 ':'w-36'}`}/>
+                            <Image src={'/logoSantaAna.png'} priority width={60} height={60}  alt='logo-ingenio'/>
                             <p className={`text-base md:text-2xl text-center hidden  ${arrowState ? 'md:hidden':' md:block'}`}>Santa Ana</p>
                         </div>
                     </Link>
