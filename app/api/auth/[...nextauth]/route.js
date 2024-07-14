@@ -1,8 +1,8 @@
 //en mi caso yo quiero registrarme de manera manual osea pasarle el email y password
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { findUniqueEmail } from "@/app/libs/data";
 import bcrypt from 'bcrypt'
+import { fetchUserByEmail } from "@/servers/UsuariosServices.js/UsuarioApiService";
 
 
 export const authOptions = {
@@ -11,24 +11,21 @@ export const authOptions = {
             {
                 name:'Credentials',
                 credentials:{
-                    email:{label:'email', type:'text', placeholder:'jsChris'},
+                    email:{label:'email', type:'text', placeholder:'example@email.com'},
                     password:{label:'Password',type:'password',placeholder:'*****'}
                 },
                 async authorize(credentials, req){
-                    const response = await findUniqueEmail(credentials.email);
+                    try{
+                        const response = await fetchUserByEmail(credentials.email);
+                        const matchPassword = await bcrypt.compare(credentials.password,  response.password);
+                        if(!matchPassword)  throw new Error('Wrong password')
+                        return{
+                            id:response.id,
+                            email:response.email
+                        }
 
-                    if(!response.rows.length) throw new Error('No user found');
-                    const userFound = response.rows.find(function(row) {
-                        return row;
-                    });
-
-                    const matchPassword = await bcrypt.compare(credentials.password,  userFound.password);
-
-                    if(!matchPassword)  throw new Error('Wrong password')
-                    return{
-                        id:userFound.id,
-                        name:userFound.name,
-                        email:userFound.email
+                    }catch(error){
+                        throw new Error(error.message)
                     }
 
                 }

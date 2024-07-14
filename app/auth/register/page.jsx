@@ -1,6 +1,6 @@
 'use client'
 import { findUniqueEmail, createUserBD } from '@/app/libs/data';
-import { ROLES } from '@/models/roles.enum';
+import { ROLES } from '@/modelsOrientacionObjeto/roles.enum';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import Link from 'next/link';

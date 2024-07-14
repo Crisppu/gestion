@@ -1,7 +1,8 @@
-import ServerComponent from "@/components/home/serverComponent";
+//import ServerComponent from "@/components/home/serverComponent";
 import { redirect} from "next/navigation";
 import { getSessionNextAuth } from "@/app/api/auth/[...nextauth]/getSessionAsync";
 import ClientComponent from "@/components/home/clientComponent";
+import NavBar from "@/components/NavBar/NavBar";
 
 export default async function Home() {
     const session = await getSessionNextAuth();
@@ -11,7 +12,7 @@ export default async function Home() {
 
     return (
         <ClientComponent>
-            <ServerComponent></ServerComponent>
+            <NavBar></NavBar>
         </ClientComponent>
     );
 }

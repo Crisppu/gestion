@@ -54,7 +54,6 @@ export default function Page() {
                                     redirect:false
                                 })
                                 if(response.error){
-                                    // alert(JSON.stringify(response.error, null, 2));
                                     setError(response.error)
                                 }else{
                                     actions.resetForm();
