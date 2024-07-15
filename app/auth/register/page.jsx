@@ -1,5 +1,7 @@
 'use client'
 import { findUniqueEmail, createUserBD } from '@/app/libs/data';
+import SvgComponentEye from '@/components/ui/svgComponents/svgComponentEye';
+import SvgComponentEyeSlash from '@/components/ui/svgComponents/svgComponentEyeSlash';
 import { ROLES } from '@/modelsOrientacionObjeto/roles.enum';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
@@ -14,62 +16,71 @@ const registerSchema = Yup.object().shape(
   //shape: nos va permitir especificar la estructura de ese objeto
     {
         cui: Yup.string()
-        .matches(/^\d{13}$/, 'The CUI must have 13 digits')
-        .required('CUI is required'),
+        .matches(/^\d{13}$/, 'El CUI es incorrecto')
+        .required('El campo es obligatorio'),
 
 
         nit: Yup.string()
-        .matches(/^\d{8}$/, 'the NIT must have 8 digits')
-        .required('NIT is required'),
+        .matches(/^\d{8}$/, 'El NIT es incorrecto')
+        .required('El campo es obligatorio'),
 
         name: Yup.string()
-        .matches(/^[A-Za-z]+$/, 'The Name can only contain letters')
-        .min(2,'name to short')
-        .max(30,'name to long')
-        .required('Name is obligatory'),
+        .matches(/^[A-Za-z]+$/, 'El nombre solo puede contener letras')
+        .min(2,'nombre muy corto')
+        .max(30,'nombre muy largo')
+        .required('El campo es obligatorio'),
 
         lastname: Yup.string()
-        .matches(/^[A-Za-z]+$/, 'The Lastname can only contain letters')
-        .min(2,'lastname to short')
-        .max(30,'lastname to long')
-        .required('Lastname is obligatory'),
+        .matches(/^[A-Za-z]+$/, 'El apellido solo puede contener letras')
+        .min(2,'apellido muy corto')
+        .max(30,'apellido muy largo')
+        .required('El campo es obligatorio'),
 
         phone: Yup.string()
-        .matches(/^\d{8}$/, 'Format does not match')
-        .required('Phone is obligatory'),
+        .matches(/^\d{8}$/, 'Formato incorrecto')
+        .required('El campo es obligatorio'),
 
         address: Yup.string()
-        .matches(/^[A-Za-z0-9\s]+$/, 'Do not use special characters (@,/,*,%,&)')
-        .min(5,'The address must contain at least 5 characters')
-        .max(100,'The address must contain a maximum of 100 characters')
-        .required('La dirección es requerida'),
+        .matches(/^[A-Za-z0-9\s]+$/, 'No se permiten caracteres especiales (@,/,*,%,&)')
+        .min(5,'Dirección muy corta')
+        .max(20,'Dirección muy larga')
+        .required('El campo es obligatorio'),
 
         gender: Yup.string()
-        .oneOf(['masculine', 'feminine'], 'select a rol'),
-        roles: Yup.string().oneOf([ROLES.USER, ROLES.ADMIN], 'select a rol'),
-
-        //roles: Yup.string().oneOf([ROLES.USER, ROLES.ADMIN], 'select a rol'),
+        .oneOf(['0', '1'], 'Seleccione su género')
+        .required('El campo es obligatorio'),
+        birthday: Yup.date()
+        .required('La fecha de nacimiento es obligatoria'),
+        stateCivil: Yup.string()
+        .oneOf(['0', '1', '2', '3'], 'Seleccione su estado civil')
+        .required('El campo es obligatorio'),
+        profession: Yup.string()
+        .required('El campo es obligatorio'),
 
         email: Yup.string()
         .email('Invalid email format')
-        .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,'The email is invalid')
-        .required('email is obligatory'),
+        .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,'El email es invalido')
+        .required('El campo es obligatorio'),
 
         password: Yup.string()
-        .min(4, 'Password should be of minimum 8 characters length')
-        .required('Password is obligatory'),
+        .min(6, 'Contraseña debe tener al menos 6 caracteres')
+        .required('El campo es obligatorio'),
         confirmPassword: Yup.string().test('passwords-match', 'Las contraseñas no coinciden', function (value) {
             return value === this.resolve(Yup.ref('password'));
-        }).required('camp required'),
+        }).required('El campo es obligatorio'),
+
+        rol: Yup.string().oneOf([ROLES.USER, ROLES.ADMIN], 'Select a Rol'),
     }
 )
 
 
 export default function Page() {
     const modeSelector = useSelector(selectDarkMode);
-    const [gender1, setGender] = useState('');
 
     const router = useRouter();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
     const initialRegister = {
         cui:'',
@@ -85,7 +96,7 @@ export default function Page() {
         email:'',
         password:'',
         confirmPassword:'',
-        roles:ROLES.USER,
+        rol:ROLES.USER,
 
     }
     
@@ -96,7 +107,7 @@ export default function Page() {
                 <div className={'flex flex-col bg-white w-96 dark:bg-black p-8 rounded-md transition-colors duration-500'}>
                 <div className='flex justify-center'><Link href={'/'}><img src='/logoSantaAna.png' alt='logo Santa Ana' width={60} height={60}></img></Link></div>
 
-                    <div className="text-2xl font-bold mb-2 text-[#1e0e4b] dark:text-white text-center">Register</div>
+                    <div className="text-2xl font-bold mb-2 text-[#1e0e4b] dark:text-white text-center">Registro</div>
                     <Formik
                         /* Initial values that the form will take */
                         initialValues = {initialRegister}
@@ -109,7 +120,7 @@ export default function Page() {
                                         return setTimeout(r, 2000)
                                     }
                                 );
-                                console.log(values);
+                                alert(JSON.stringify(values));
 
 
 
@@ -170,57 +181,65 @@ export default function Page() {
 
                                 </div>
 
-                                <label  htmlFor='name' className="block text-gray-500 cursor-text text-base font-semibold mb-2">Name</label>
-                                <Field
-                                    autoComplete="name"
-                                    id='name'
-                                    name='name'
-                                    placeholder='name'
-                                    type='text'
-                                    className="rounded border-2 border-gray-200  text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                ></Field>
-                                {errors.name && touched.name && (
-                                    <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='name'></ErrorMessage>
+                                <div className='flex gap-2 '>
+                                    <div>
+                                        <label  htmlFor='name' className="block text-gray-500 cursor-text text-base font-semibold mb-2">Nombre</label>
+                                        <Field
+                                            autoComplete="name"
+                                            id='name'
+                                            name='name'
+                                            placeholder='Nombre'
+                                            type='text'
+                                            className="rounded border-2 border-gray-200  text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        ></Field>
+                                        {errors.name && touched.name && (
+                                            <div className='text-red-700 text-sm'>
+                                                <ErrorMessage name='name'></ErrorMessage>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
 
-                                <label hrmlFrom="lastname" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Lastname</label>
-                                <Field
-                                    autoComplete="lastname"
-                                    id="lastname"
-                                    name="lastname"
-                                    placeholder="lastname"
-                                    type='text'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                />
-                                {errors.lastname && touched.lastname && (
-                                    <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='lastname'></ErrorMessage>
+                                    <div>
+                                        <label hrmlFrom="lastname" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Apellido</label>
+                                        <Field
+                                            autoComplete="lastname"
+                                            id="lastname"
+                                            name="lastname"
+                                            placeholder="Apellido"
+                                            type='text'
+                                            className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        />
+                                        {errors.lastname && touched.lastname && (
+                                            <div className='text-red-700 text-sm'>
+                                                <ErrorMessage name='lastname'></ErrorMessage>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
+                                </div>
 
-                                <label htmlFor="phone" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Phone</label>
-                                <Field
-                                    autoComplete="phone"
-                                    id="phone"
-                                    name="phone"
-                                    placeholder="xxxx-xxxx"
-                                    type='text'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                />
-                                {errors.phone && touched.phone && (
-                                    <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='phone'></ErrorMessage>
-                                    </div>
-                                )}
+                                <label htmlFor="phone" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Numero de telefono</label>
+                                <div className='flex gap-1 items-center'>
+                                    <span className='text-black dark:text-white'>+502</span>
+                                    <Field
+                                        autoComplete="phone"
+                                        id="phone"
+                                        name="phone"
+                                        placeholder="xxxx-xxxx"
+                                        type='text'
+                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    />
+                                    {errors.phone && touched.phone && (
+                                        <div className='text-red-700 text-sm'>
+                                            <ErrorMessage name='phone'></ErrorMessage>
+                                        </div>
+                                    )}
+                                </div>
 
-                                <label htmlFor="address" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Address</label>
+                                <label htmlFor="address" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Direccion</label>
                                 <Field
                                     autoComplete="address"
                                     id="address"
                                     name="address"
-                                    placeholder="address"
                                     type='text'
                                     className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
@@ -230,85 +249,43 @@ export default function Page() {
                                     </div>
                                 )}
 
-                                {/* <label htmlFor="gender" className="block text-gray-500 cursor-text text-base font-semibold mb-2">gender</label> */}
-
-                                <div className="" >
-                                    <span className="block text-gray-500 cursor-text text-base font-semibold mb-2">Gender</span>
+                                <div>
+                                    <span className="block text-gray-500 cursor-text text-base font-semibold mb-2">Genero</span>
                                     <div className="flex gap-3">
 
                                         <div className="flex items-center mb-2 gap-2">
                                             <Field
-                                                checked={gender1 === 'masculine'}
-                                                onChange={() => setGender('masculine')}
                                                 id="gender-male"
                                                 type="radio"
-                                                value="masculine"
+                                                value="1"
                                                 name="gender"
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                                             <label htmlFor="gender-male" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Male</label>
-                                            
+
                                             <Field
-                                                checked={gender1 === 'feminine'}
-                                                onChange={() => setGender('feminine')}
                                                 id="gender-female"
                                                 type="radio"
-                                                value="feminine"
+                                                value="0"
                                                 name="gender"
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                                             <label htmlFor="gender-female" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Female</label>
 
-                                            <Field
-                                                checked={gender1 === 'a'}
-                                                onChange={() => setGender('a')}
-                                                id="gender-female"
-                                                type="radio"
-                                                value="a"
-                                                name="otro"
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                                            <label htmlFor="otro" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">otro</label>
-                                            
+                                            {errors.gender && touched.gender && (
+                                                <div className='text-red-700 text-sm'>
+                                                    <ErrorMessage name='gender'></ErrorMessage>
+                                                </div>
+                                            )}
+
                                         </div>
-                                        {errors.gender && touched.gender && (
-                                            <div className='text-red-700 text-sm'>
-                                                <ErrorMessage name='gender'></ErrorMessage>
-                                            </div>
-                                        )}
                                     </div>
-                                    <label htmlFor='roles'>Rol</label>
-                                    <Field id='roles' name='roles' component='select' preventDefault={ROLES.USER}>
-                                        <option value='user'>User</option>
-                                        <option value='admin'>Admin</option>
-                                        <option value='nada'>nada</option>
-
-                                    </Field>
-                                    {errors.roles && touched.roles && (
-                                        <div className='text-red-700 text-sm'>
-                                            <ErrorMessage name='roles'></ErrorMessage>
-                                        </div>
-                                    )}
-
                                 </div>
-                                {/* <Field
-                                    autoComplete="gender"
-                                    id="gender"
-                                    name="gender"
-                                    placeholder="gender"
-                                    type='text'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                />
-                                {errors.gender && touched.gender && (
-                                    <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='gender'></ErrorMessage>
-                                    </div>
-                                )} */}
 
-                                <label htmlFor="birthday" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Birthday</label>
+                                <label htmlFor="birthday" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Fecha de Nacimiento</label>
                                 <Field
                                     autoComplete="birthday"
                                     id="birthday"
                                     name="birthday"
-                                    placeholder="birthday"
-                                    type='text'
+                                    type='date'
                                     className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.birthday && touched.birthday && (
@@ -316,26 +293,56 @@ export default function Page() {
                                         <ErrorMessage name='birthday'></ErrorMessage>
                                     </div>
                                 )}
+                                <div>
+                                    <span className="block text-gray-500 cursor-text text-base font-semibold mb-2">Estado Civil</span>
+                                    <div className="flex gap-3">
 
-                                <label htmlFor="stateCivil" className="block text-gray-500 cursor-text text-base font-semibold mb-2">State Civil</label>
-                                <Field
-                                    autoComplete="stateCivil"
-                                    id="stateCivil"
-                                    name="stateCivil"
-                                    placeholder="stateCivil"
-                                    type='text'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
-                                {errors.stateCivil && touched.stateCivil && (
-                                    <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='stateCivil'></ErrorMessage>
+                                        <div className="flex items-center mb-2 gap-1">
+                                            <Field
+                                                id="state-single"
+                                                type="radio"
+                                                value="0"
+                                                name="stateCivil"
+                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                                            <label htmlFor="gender-single" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Soltero</label>
+
+                                            <Field
+                                                id="state-married"
+                                                type="radio"
+                                                value="1"
+                                                name="stateCivil"
+                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                                            <label htmlFor="state-married" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Casado</label>
+                                            <Field
+                                                id="state-divorced"
+                                                type="radio"
+                                                value="2"
+                                                name="stateCivil"
+                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                                            <label htmlFor="state-divorced" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Divorciado</label>
+                                            <Field
+                                                id="state-Widowed"
+                                                type="radio"
+                                                value="3"
+                                                name="stateCivil"
+                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                                            <label htmlFor="state-Widowed" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Viudo</label>
+
+                                        </div>
                                     </div>
-                                )}
+                                    {errors.stateCivil && touched.stateCivil && (
+                                        <div className='text-red-700 text-sm'>
+                                            <ErrorMessage name='stateCivil'></ErrorMessage>
+                                        </div>
+                                    )}
 
-                                <label htmlFor="profession" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Profession</label>
+                                </div>
+
+
+                                <label htmlFor="profession" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Profesion</label>
                                 <Field
                                     autoComplete="profession"
                                     id="profession" name="profession"
-                                    placeholder="profession"
                                     type='text'
                                     className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
                                 {errors.profession && touched.profession && (
@@ -344,7 +351,7 @@ export default function Page() {
                                     </div>
                                 )}
 
-                                <label htmlFor="email" className="block text-gray-500 cursor-text text-base font-semibold mb-2">E-mail</label>
+                                <label htmlFor="email" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Correo Electronico</label>
                                 <Field
                                     autoComplete="email"
                                     id="email"
@@ -359,49 +366,51 @@ export default function Page() {
                                     </div>
                                 )}
 
-                                <label  htmlFor="password" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Password</label>
-                                <Field
-                                    autoComplete="current-password"
-                                    id="password"
-                                    name="password"
-                                    placeholder="password"
-                                    type="password"
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                />
+                                <label  htmlFor="password" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Contraseña</label>
+                                <div className='flex'>
+                                    <Field
+                                        autoComplete="current-password"
+                                        id="password"
+                                        name="password"
+                                        type={showPassword ? "text" : "password"}
+                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    />
+                                    <span onClick={()=>setShowPassword(!showPassword)}  className='rounded border-2  bg-gray-200 w-10  flex items-center justify-center cursor-pointer'>{showPassword ? <SvgComponentEye></SvgComponentEye> : <SvgComponentEyeSlash></SvgComponentEyeSlash>}</span>
+                                </div>
                                 {errors.password && touched.password && (
                                     <div className='text-red-700 text-sm'>
                                         <ErrorMessage name='password'></ErrorMessage>
                                     </div>
                                 )}
 
-                                <label htmlFor="confirmPassword" className="block text-gray-500 cursor-text text-base font-semibold mb-2">confirmPassword</label>
-                                <Field
-                                    autoComplete="new-password"
-                                    id="confirmPassword"
-                                    name="confirmPassword"
-                                    placeholder="confirmPassword password"
-                                    type="password"
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                />
+                                <label htmlFor="confirmPassword" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Confirmar Contraseña</label>
+                                <div className='flex'>
+                                    <Field
+                                        autoComplete="new-password"
+                                        id="confirmPassword"
+                                        name="confirmPassword"
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    />
+                                    <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}  className='rounded border-2  bg-gray-200 w-10  flex items-center justify-center cursor-pointer'>{showConfirmPassword ? <SvgComponentEye></SvgComponentEye> : <SvgComponentEyeSlash></SvgComponentEyeSlash>}</span>
+
+                                </div>
                                 {errors.confirmPassword && touched.confirmPassword && (
                                     <div className='text-red-700 text-sm'>
                                         <ErrorMessage name='confirmPassword'></ErrorMessage>
                                     </div>
                                 )}
 
-                                <label htmlFor="id_role" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Role</label>
-                                <Field
-                                    autoComplete="id_role"
-                                    id="id_role"
-                                    name="id_role"
-                                    placeholder="id_role"
-                                    type='text'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
-                                {errors.id_role && touched.id_role && (
-                                    <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='id_role'></ErrorMessage>
-                                    </div>
-                                )}
+                                <label htmlFor='rol'className='block text-gray-500 cursor-text text-base font-semibold mb-2'>Rol</label>
+                                    <Field id='rol' name='rol' component='select' preventDefault={ROLES.USER} className='rounded border-2 border-gray-200 text-black focus:border-green-400 focus:ring-green-400  outline-0'>
+                                        <option value='user'>User</option>
+                                        <option value='admin'>Admin</option>
+                                    </Field>
+                                    {errors.rol && touched.rol && (
+                                        <div className='text-red-700 text-sm'>
+                                            <ErrorMessage name='rol'></ErrorMessage>
+                                        </div>
+                                    )}
 
                                 <div className='flex flex-col pt-2 gap-2'>
                                     <Link href="/auth/login" className="text-sm text-green-400"><p>¿Ya tiene una cuenta? Iniciar sesion</p></Link>

@@ -23,7 +23,7 @@ async function seedCreateUsuarios(client){
             CREATE TABLE IF NOT EXISTS Usuarios(
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 correo VARCHAR(30) NOT NULL UNIQUE,
-                password VARCHAR(40) NOT NULL
+                contrasenia VARCHAR(40) NOT NULL
             );
         `;
         console.log(`Created "Usuarios" table`);

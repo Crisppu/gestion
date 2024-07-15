@@ -17,7 +17,7 @@ export const authOptions = {
                 async authorize(credentials, req){
                     try{
                         const response = await fetchUserByEmail(credentials.email);
-                        const matchPassword = await bcrypt.compare(credentials.password,  response.password);
+                        const matchPassword = await bcrypt.compare(credentials.password,  response.contrasenia);
                         if(!matchPassword)  throw new Error('Wrong password')
                         return{
                             id:response.id,
