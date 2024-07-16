@@ -24,49 +24,55 @@ const registerSchema = Yup.object().shape(
         .matches(/^\d{8}$/, 'El NIT es incorrecto')
         .required('El campo es obligatorio'),
 
-        name: Yup.string()
+        nombre: Yup.string()
         .matches(/^[A-Za-z]+$/, 'El nombre solo puede contener letras')
         .min(2,'nombre muy corto')
         .max(30,'nombre muy largo')
         .required('El campo es obligatorio'),
 
-        lastname: Yup.string()
+        apellido: Yup.string()
         .matches(/^[A-Za-z]+$/, 'El apellido solo puede contener letras')
         .min(2,'apellido muy corto')
         .max(30,'apellido muy largo')
         .required('El campo es obligatorio'),
 
-        phone: Yup.string()
+        telefono: Yup.string()
         .matches(/^\d{8}$/, 'Formato incorrecto')
         .required('El campo es obligatorio'),
 
-        address: Yup.string()
+        direccion: Yup.string()
         .matches(/^[A-Za-z0-9\s]+$/, 'No se permiten caracteres especiales (@,/,*,%,&)')
         .min(5,'Dirección muy corta')
         .max(20,'Dirección muy larga')
         .required('El campo es obligatorio'),
 
-        gender: Yup.string()
+        genero: Yup.string()
         .oneOf(['0', '1'], 'Seleccione su género')
         .required('El campo es obligatorio'),
-        birthday: Yup.date()
+        fecha_nacimiento: Yup.date()
         .required('La fecha de nacimiento es obligatoria'),
-        stateCivil: Yup.string()
+        estado_civil: Yup.string()
         .oneOf(['0', '1', '2', '3'], 'Seleccione su estado civil')
         .required('El campo es obligatorio'),
-        profession: Yup.string()
+        profesion: Yup.string()
+        .required('El campo es obligatorio'),
+        posicion: Yup.string()
+        .required('El campo es obligatorio'),
+        fecha_contratacion: Yup.date()
+        .required('El campo es obligatorio'),
+        departamento: Yup.string()
         .required('El campo es obligatorio'),
 
-        email: Yup.string()
+        correo: Yup.string()
         .email('Invalid email format')
         .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,'El email es invalido')
         .required('El campo es obligatorio'),
 
-        password: Yup.string()
+        contrasenia: Yup.string()
         .min(6, 'Contraseña debe tener al menos 6 caracteres')
         .required('El campo es obligatorio'),
-        confirmPassword: Yup.string().test('passwords-match', 'Las contraseñas no coinciden', function (value) {
-            return value === this.resolve(Yup.ref('password'));
+        confirmar_contrasenia: Yup.string().test('passwords-match', 'Las contraseñas no coinciden', function (value) {
+            return value === this.resolve(Yup.ref('contrasenia'));
         }).required('El campo es obligatorio'),
 
         rol: Yup.string().oneOf([ROLES.USER, ROLES.ADMIN], 'Select a Rol'),
@@ -85,21 +91,28 @@ export default function Page() {
     const initialRegister = {
         cui:'',
         nit:'',
-        name:'',
-        lastname:'',
-        phone:'',
-        address:'',
-        gender:'',
-        birthday:'',
-        stateCivil:'',
-        profession:'',
-        email:'',
-        password:'',
-        confirmPassword:'',
+        nombre:'',
+        apellido:'',
+        telefono:'',
+        direccion:'',
+        genero:'',
+        fecha_nacimiento:'',
+        estado_civil:'',
+        profesion:'',
+
+        posicion:'',
+        fecha_contratacion:'',
+        departamento:'',
+        correo:'',
+        contrasenia:'',
+        confirmar_contrasenia:'',
         rol:ROLES.USER,
 
     }
     
+    const borrar = (valores) => {
+        console.log(valores)
+    }
 
     return (
         <div className={`flex justify-center items-center min-h-screen ${modeSelector} dark:bg-black`}>
@@ -121,8 +134,9 @@ export default function Page() {
                                     }
                                 );
                                 alert(JSON.stringify(values));
+                                borrar(values);
 
-
+                                //nombre:value.name
 
 
 
@@ -187,14 +201,14 @@ export default function Page() {
                                         <Field
                                             autoComplete="name"
                                             id='name'
-                                            name='name'
+                                            name='nombre'
                                             placeholder='Nombre'
                                             type='text'
                                             className="rounded border-2 border-gray-200  text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                         ></Field>
-                                        {errors.name && touched.name && (
+                                        {errors.nombre && touched.nombre&& (
                                             <div className='text-red-700 text-sm'>
-                                                <ErrorMessage name='name'></ErrorMessage>
+                                                <ErrorMessage name='nombre'></ErrorMessage>
                                             </div>
                                         )}
                                     </div>
@@ -204,14 +218,14 @@ export default function Page() {
                                         <Field
                                             autoComplete="lastname"
                                             id="lastname"
-                                            name="lastname"
+                                            name="apellido"
                                             placeholder="Apellido"
                                             type='text'
                                             className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                         />
-                                        {errors.lastname && touched.lastname && (
+                                        {errors.apellido && touched.apellido && (
                                             <div className='text-red-700 text-sm'>
-                                                <ErrorMessage name='lastname'></ErrorMessage>
+                                                <ErrorMessage name='apellido'></ErrorMessage>
                                             </div>
                                         )}
                                     </div>
@@ -223,14 +237,14 @@ export default function Page() {
                                     <Field
                                         autoComplete="phone"
                                         id="phone"
-                                        name="phone"
+                                        name="telefono"
                                         placeholder="xxxx-xxxx"
                                         type='text'
                                         className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
-                                    {errors.phone && touched.phone && (
+                                    {errors.telefono && touched.telefono && (
                                         <div className='text-red-700 text-sm'>
-                                            <ErrorMessage name='phone'></ErrorMessage>
+                                            <ErrorMessage name='telefono'></ErrorMessage>
                                         </div>
                                     )}
                                 </div>
@@ -239,13 +253,13 @@ export default function Page() {
                                 <Field
                                     autoComplete="address"
                                     id="address"
-                                    name="address"
+                                    name="direccion"
                                     type='text'
                                     className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
-                                {errors.address && touched.address && (
+                                {errors.direccion && touched.direccion && (
                                     <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='address'></ErrorMessage>
+                                        <ErrorMessage name='direccion'></ErrorMessage>
                                     </div>
                                 )}
 
@@ -258,7 +272,7 @@ export default function Page() {
                                                 id="gender-male"
                                                 type="radio"
                                                 value="1"
-                                                name="gender"
+                                                name="genero"
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                                             <label htmlFor="gender-male" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Male</label>
 
@@ -266,13 +280,13 @@ export default function Page() {
                                                 id="gender-female"
                                                 type="radio"
                                                 value="0"
-                                                name="gender"
+                                                name="genero"
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                                             <label htmlFor="gender-female" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Female</label>
 
-                                            {errors.gender && touched.gender && (
+                                            {errors.genero && touched.genero && (
                                                 <div className='text-red-700 text-sm'>
-                                                    <ErrorMessage name='gender'></ErrorMessage>
+                                                    <ErrorMessage name='genero'></ErrorMessage>
                                                 </div>
                                             )}
 
@@ -284,13 +298,13 @@ export default function Page() {
                                 <Field
                                     autoComplete="birthday"
                                     id="birthday"
-                                    name="birthday"
+                                    name="fecha_nacimiento"
                                     type='date'
                                     className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
-                                {errors.birthday && touched.birthday && (
+                                {errors.fecha_nacimiento && touched.fecha_nacimiento && (
                                     <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='birthday'></ErrorMessage>
+                                        <ErrorMessage name='fecha_nacimiento'></ErrorMessage>
                                     </div>
                                 )}
                                 <div>
@@ -302,7 +316,7 @@ export default function Page() {
                                                 id="state-single"
                                                 type="radio"
                                                 value="0"
-                                                name="stateCivil"
+                                                name="estado_civil"
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                                             <label htmlFor="gender-single" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Soltero</label>
 
@@ -310,29 +324,29 @@ export default function Page() {
                                                 id="state-married"
                                                 type="radio"
                                                 value="1"
-                                                name="stateCivil"
+                                                name="estado_civil"
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                                             <label htmlFor="state-married" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Casado</label>
                                             <Field
                                                 id="state-divorced"
                                                 type="radio"
                                                 value="2"
-                                                name="stateCivil"
+                                                name="estado_civil"
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                                             <label htmlFor="state-divorced" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Divorciado</label>
                                             <Field
                                                 id="state-Widowed"
                                                 type="radio"
                                                 value="3"
-                                                name="stateCivil"
+                                                name="estado_civil"
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                                             <label htmlFor="state-Widowed" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Viudo</label>
 
                                         </div>
                                     </div>
-                                    {errors.stateCivil && touched.stateCivil && (
+                                    {errors.estado_civil && touched.estado_civil && (
                                         <div className='text-red-700 text-sm'>
-                                            <ErrorMessage name='stateCivil'></ErrorMessage>
+                                            <ErrorMessage name='estado_civil'></ErrorMessage>
                                         </div>
                                     )}
 
@@ -342,12 +356,49 @@ export default function Page() {
                                 <label htmlFor="profession" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Profesion</label>
                                 <Field
                                     autoComplete="profession"
-                                    id="profession" name="profession"
+                                    id="profession" name="profesion"
                                     type='text'
                                     className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
-                                {errors.profession && touched.profession && (
+                                {errors.profesion && touched.profesion && (
                                     <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='profession'></ErrorMessage>
+                                        <ErrorMessage name='profesion'></ErrorMessage>
+                                    </div>
+                                )}
+                                <label htmlFor="position" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Posicion</label>
+                                <Field
+                                    autoComplete="position"
+                                    id="position"
+                                    name="posicion"
+                                    type='text'
+                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
+                                {errors.posicion && touched.posicion && (
+                                    <div className='text-red-700 text-sm'>
+                                        <ErrorMessage name='posicion'></ErrorMessage>
+                                    </div>
+                                )}
+                                <label htmlFor="hiring_date" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Fecha de Contratacion</label>
+                                <Field
+                                    autoComplete="hiring_date"
+                                    id="hiring_date"
+                                    name="fecha_contratacion"
+                                    type='date'
+                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                />
+                                {errors.fecha_contratacion && touched.fecha_contratacion && (
+                                    <div className='text-red-700 text-sm'>
+                                        <ErrorMessage name='fecha_contratacion'></ErrorMessage>
+                                    </div>
+                                )}
+                                <label htmlFor="department" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Departamento</label>
+                                <Field
+                                    autoComplete="department"
+                                    id="department"
+                                    name="departamento"
+                                    type='text'
+                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
+                                {errors.departamento && touched.departamento && (
+                                    <div className='text-red-700 text-sm'>
+                                        <ErrorMessage name='departamento'></ErrorMessage>
                                     </div>
                                 )}
 
@@ -355,14 +406,14 @@ export default function Page() {
                                 <Field
                                     autoComplete="email"
                                     id="email"
-                                    name="email"
+                                    name="correo"
                                     placeholder="example@email.com"
                                     type='email'
                                     className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
-                                {errors.email && touched.email && (
+                                {errors.correo && touched.correo && (
                                     <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='email'></ErrorMessage>
+                                        <ErrorMessage name='correo'></ErrorMessage>
                                     </div>
                                 )}
 
@@ -371,15 +422,15 @@ export default function Page() {
                                     <Field
                                         autoComplete="current-password"
                                         id="password"
-                                        name="password"
+                                        name="contrasenia"
                                         type={showPassword ? "text" : "password"}
                                         className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
                                     <span onClick={()=>setShowPassword(!showPassword)}  className='rounded border-2  bg-gray-200 w-10  flex items-center justify-center cursor-pointer'>{showPassword ? <SvgComponentEye></SvgComponentEye> : <SvgComponentEyeSlash></SvgComponentEyeSlash>}</span>
                                 </div>
-                                {errors.password && touched.password && (
+                                {errors.contrasenia && touched.contrasenia && (
                                     <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='password'></ErrorMessage>
+                                        <ErrorMessage name='contrasenia'></ErrorMessage>
                                     </div>
                                 )}
 
@@ -388,16 +439,16 @@ export default function Page() {
                                     <Field
                                         autoComplete="new-password"
                                         id="confirmPassword"
-                                        name="confirmPassword"
+                                        name="confirmar_contrasenia"
                                         type={showConfirmPassword ? "text" : "password"}
                                         className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
                                     <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}  className='rounded border-2  bg-gray-200 w-10  flex items-center justify-center cursor-pointer'>{showConfirmPassword ? <SvgComponentEye></SvgComponentEye> : <SvgComponentEyeSlash></SvgComponentEyeSlash>}</span>
 
                                 </div>
-                                {errors.confirmPassword && touched.confirmPassword && (
+                                {errors.confirmar_contrasenia && touched.confirmar_contrasenia && (
                                     <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='confirmPassword'></ErrorMessage>
+                                        <ErrorMessage name='confirmar_contrasenia'></ErrorMessage>
                                     </div>
                                 )}
 

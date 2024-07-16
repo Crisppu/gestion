@@ -2,7 +2,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcrypt'
-import { fetchUserByEmail } from "@/servers/UsuariosServices.js/UsuarioApiService";
+import { fetchUserByEmail } from "@/services/UsuarioService.js/UsuarioApiService";
 
 
 export const authOptions = {
