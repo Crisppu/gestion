@@ -17,15 +17,17 @@ export const authOptions = {
                 async authorize(credentials, req){
                     try{
                         const response = await fetchUserByEmail(credentials.email);
-                        const matchPassword = await bcrypt.compare(credentials.password,  response.contrasenia);
+                        console.log(response)
+                        if(!response.data) throw new Error('No user found');
+                        const matchPassword = await bcrypt.compare(credentials.password,  response.data.contrasenia);
                         if(!matchPassword)  throw new Error('Wrong password')
                         return{
-                            id:response.id,
-                            email:response.email
+                            id:response.data.id,
+                            email:response.data.correo
                         }
 
                     }catch(error){
-                        throw new Error(error.message)
+                        throw new Error(error)
                     }
 
                 }

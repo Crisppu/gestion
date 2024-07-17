@@ -17,7 +17,7 @@ export async function fetchUserByEmail(correo) {
         const response = await axios.get(`http://localhost:3000/api/usuario/${correo}`);
         return response.data;
     } catch (error) {
-        throw new Error(error.response?.data?.message);
+        throw new Error(error.response?.data.message);
     }
 
 }
