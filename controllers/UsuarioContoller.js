@@ -1,18 +1,15 @@
 'use server'
 
-import { getUserByEmail } from "@/models/Usuario";
+import { createUser, getUserByEmail } from "@/models/Usuario";
 //crud
 //TODO: Create - controller
 export const createUserController = async (req, res) => {
     const {correo, contrasenia} = req.body;
     try {
-        const newUser = await createUser({
-            correo,
-            contrasenia
-        });
+        const newUser = await createUser(correo,contrasenia);
         res.status(201).json(newUser);
     } catch (error) {
-        res.status(500).json({ error: 'Error al crear un nuevo usuario' });
+        res.status(500).json({ message: 'Error al crear un nuevo usuario' ,error: error });
     }
 
 };
@@ -27,7 +24,7 @@ export const getUserByEmailController = async (req, res) => {
         if(!user.rows.length){
             res.status(200).json({ message: 'Correo no encontrado', data: null  });
         }else{
-            res.status(200).json({ message: 'Correo encontrado', data: user.rows[0] });
+            res.status(200).json({ message: 'Correo existente', data: user.rows[0] });
         }
     } catch (error) {
         res.status(500).json({message:'Error al obtener los datos del usuario', error: error });

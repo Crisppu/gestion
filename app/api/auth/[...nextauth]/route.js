@@ -17,7 +17,6 @@ export const authOptions = {
                 async authorize(credentials, req){
                     try{
                         const response = await fetchUserByEmail(credentials.email);
-                        console.log(response)
                         if(!response.data) throw new Error('No user found');
                         const matchPassword = await bcrypt.compare(credentials.password,  response.data.contrasenia);
                         if(!matchPassword)  throw new Error('Wrong password')

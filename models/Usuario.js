@@ -1,18 +1,22 @@
 'use server'
 import { sql } from '@vercel/postgres';
+import bcrypt from 'bcrypt'
+
 //crud
 //TODO: Create
-export async function createUser(data) {
-    try {
-        const response = await sql`
-            INSERT INTO Usuarios (correo, contrasenia) VALUES (${data.correo}, ${data.contrasenia}) RETURNING *;`;
-        return response.rows[0];
-    } catch (error) {
-        // Manejar errores de solicitud
-        console.error('Error al realizar la solicitud:', error.message);
-        // Lanzar un nuevo error con más contexto
-        throw new Error('Hubo un problema al realizar la solicitud de creación de usuario');
-    }
+export async function createUser(correo, contrasenia) {
+
+    const hashedPassword = await bcrypt.hash(contrasenia, 10);
+    const response = await sql`
+        INSERT INTO Usuarios (correo, contrasenia) VALUES (${correo}, ${hashedPassword}) RETURNING *;`;
+    //omitir contrsenia
+    const bypassPassword = response.rows.map(row =>{
+        const { contrasenia, ...user} = row; // Utilizando destructuring para excluir el campo 'password'
+        return user;
+    });
+    //retornar todo los datos del usuario creado excepto la contrasenia
+    return bypassPassword[0];
+   // return response.rows[0];
 }
 
 

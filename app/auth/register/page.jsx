@@ -4,6 +4,7 @@ import SvgComponentEye from '@/components/ui/svgComponents/svgComponentEye';
 import SvgComponentEyeSlash from '@/components/ui/svgComponents/svgComponentEyeSlash';
 import { ROLES } from '@/modelsOrientacionObjeto/roles.enum';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
+import { fetchCreateNewUser, fetchUserByEmail } from '@/services/UsuarioService.js/UsuarioApiService';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -133,10 +134,21 @@ export default function Page() {
                                         return setTimeout(r, 2000)
                                     }
                                 );
-                                alert(JSON.stringify(values));
+                                //alert(JSON.stringify(values));
                                 borrar(values);
 
-                                //nombre:value.name
+                                try{
+                                    const response = await fetchUserByEmail(values.correo);
+                                    if(!response.data) {
+                                        const responseNewUser = await fetchCreateNewUser(values.correo, values.contrasenia);
+                                        borrar(responseNewUser)
+                                    }else{
+                                        alert(JSON.stringify(response.message))
+                                    }
+
+                                }catch(error){
+                                    throw new Error(error)
+                                }
 
 
 
