@@ -7,7 +7,7 @@ export const createUserController = async (req, res) => {
     const {correo, contrasenia} = req.body;
     try {
         const newUser = await createUser(correo,contrasenia);
-        res.status(201).json(newUser);
+        res.status(201).json(newUser.rows[0]);
     } catch (error) {
         res.status(500).json({ message: 'Error al crear un nuevo usuario' ,error: error });
     }

@@ -1,10 +1,10 @@
 'use client'
-import { findUniqueEmail, createUserBD } from '@/app/libs/data';
 import SvgComponentEye from '@/components/ui/svgComponents/svgComponentEye';
 import SvgComponentEyeSlash from '@/components/ui/svgComponents/svgComponentEyeSlash';
 import { ROLES } from '@/modelsOrientacionObjeto/roles.enum';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
-import { fetchCreateNewUser, fetchUserByEmail } from '@/services/UsuarioService.js/UsuarioApiService';
+import { fetchCreateNewEmployeeTransaction } from '@/services/transaccionService/transiccionUsuarioAndEmpleadoApiService';
+import { fetchUserByEmail } from '@/services/UsuarioService/UsuarioApiService';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -76,7 +76,7 @@ const registerSchema = Yup.object().shape(
             return value === this.resolve(Yup.ref('contrasenia'));
         }).required('El campo es obligatorio'),
 
-        rol: Yup.string().oneOf([ROLES.USER, ROLES.ADMIN], 'Select a Rol'),
+        id_rol: Yup.string().oneOf([ROLES.USER, ROLES.ADMIN], 'Select a Rol'),
     }
 )
 
@@ -87,6 +87,7 @@ export default function Page() {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [message, setMessage] = useState('');
 
 
     const initialRegister = {
@@ -100,19 +101,14 @@ export default function Page() {
         fecha_nacimiento:'',
         estado_civil:'',
         profesion:'',
-
         posicion:'',
         fecha_contratacion:'',
         departamento:'',
         correo:'',
         contrasenia:'',
         confirmar_contrasenia:'',
-        rol:ROLES.USER,
+        id_rol:ROLES.USER,
 
-    }
-    
-    const borrar = (valores) => {
-        console.log(valores)
     }
 
     return (
@@ -122,6 +118,8 @@ export default function Page() {
                 <div className='flex justify-center'><Link href={'/'}><img src='/logoSantaAna.png' alt='logo Santa Ana' width={60} height={60}></img></Link></div>
 
                     <div className="text-2xl font-bold mb-2 text-[#1e0e4b] dark:text-white text-center">Registro</div>
+                    {message && <p className='text-red-600'>{message}</p>}
+
                     <Formik
                         /* Initial values that the form will take */
                         initialValues = {initialRegister}
@@ -134,20 +132,26 @@ export default function Page() {
                                         return setTimeout(r, 2000)
                                     }
                                 );
-                                //alert(JSON.stringify(values));
-                                borrar(values);
-
                                 try{
                                     const response = await fetchUserByEmail(values.correo);
-                                    if(!response.data) {
-                                        const responseNewUser = await fetchCreateNewUser(values.correo, values.contrasenia);
-                                        borrar(responseNewUser)
-                                    }else{
+                                    if(response.data) {
                                         alert(JSON.stringify(response.message))
                                     }
+                                    const{confirmar_contrasenia, ...newList}=values;
+
+                                    const responseTransaction = await fetchCreateNewEmployeeTransaction(newList);
+                                    actions.resetForm();
+                                    alert(JSON.stringify(responseTransaction.message));
+                                    await new Promise((r) =>{
+                                            return setTimeout(r, 2000)
+                                        }
+                                    );
+                                    router.push('/auth/login');
 
                                 }catch(error){
-                                    throw new Error(error)
+                                    //console.error(error);
+                                    //throw new Error(error)
+                                    setMessage(error.response ? error.response.data.message : error.menssage)
                                 }
 
 
@@ -286,7 +290,7 @@ export default function Page() {
                                                 value="1"
                                                 name="genero"
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                                            <label htmlFor="gender-male" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Male</label>
+                                            <label htmlFor="gender-male" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Masculino</label>
 
                                             <Field
                                                 id="gender-female"
@@ -294,7 +298,7 @@ export default function Page() {
                                                 value="0"
                                                 name="genero"
                                                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                                            <label htmlFor="gender-female" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Female</label>
+                                            <label htmlFor="gender-female" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Femenino</label>
 
                                             {errors.genero && touched.genero && (
                                                 <div className='text-red-700 text-sm'>
@@ -465,13 +469,13 @@ export default function Page() {
                                 )}
 
                                 <label htmlFor='rol'className='block text-gray-500 cursor-text text-base font-semibold mb-2'>Rol</label>
-                                    <Field id='rol' name='rol' component='select' preventDefault={ROLES.USER} className='rounded border-2 border-gray-200 text-black focus:border-green-400 focus:ring-green-400  outline-0'>
+                                    <Field id='rol' name='id_rol' component='select' preventDefault={ROLES.USER} className='rounded border-2 border-gray-200 text-black focus:border-green-400 focus:ring-green-400  outline-0'>
                                         <option value='user'>User</option>
                                         <option value='admin'>Admin</option>
                                     </Field>
-                                    {errors.rol && touched.rol && (
+                                    {errors.id_rol && touched.id_rol && (
                                         <div className='text-red-700 text-sm'>
-                                            <ErrorMessage name='rol'></ErrorMessage>
+                                            <ErrorMessage name='id_rol'></ErrorMessage>
                                         </div>
                                     )}
 

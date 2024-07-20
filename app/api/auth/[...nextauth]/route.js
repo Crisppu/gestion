@@ -2,7 +2,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcrypt'
-import { fetchUserByEmail } from "@/services/UsuarioService.js/UsuarioApiService";
+import { fetchUserByEmail } from "@/services/UsuarioService/UsuarioApiService";
 
 
 export const authOptions = {
@@ -26,7 +26,7 @@ export const authOptions = {
                         }
 
                     }catch(error){
-                        throw new Error(error)
+                        throw new Error(error.response ? error.response.data : error.menssage)
                     }
 
                 }

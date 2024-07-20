@@ -2,7 +2,7 @@
 import { createEmployee } from "@/models/Empleado";
 
 export const createEmployeeController = async (req, res) => {
-    //const { nombre, apellido, email, telefono, direccion, fecha_nacimiento, cargo, salario, usuario_id } = req.body;
+    console.log(req.body)
     const {
         cui,
         nit,
@@ -20,7 +20,7 @@ export const createEmployeeController = async (req, res) => {
         id_rol,
         id_usuario
     } = req.body;
-
+    //console.log(cui, nit)
     try {
         const newEmployee = await createEmployee({
             cui,
@@ -39,9 +39,13 @@ export const createEmployeeController = async (req, res) => {
             id_rol,
             id_usuario
         });
-        res.status(201).json(newEmployee);
+        console.log(newEmployee)
+        if(newEmployee.rows.length){
+            res.status(201).json({ message: 'Empleado creado con exito', data: newEmployee.rows[0] });
+        }
     } catch (error) {
-        res.status(500).json({ message: 'Error al crear un nuevo empleado' });
+        //console.error(error.message,'controller')
+        res.status(500).json({ message: `Error al crear un nuevo empleado: ${error}` });
     }
 
 };
