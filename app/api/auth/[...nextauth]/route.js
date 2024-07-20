@@ -26,7 +26,7 @@ export const authOptions = {
                         }
 
                     }catch(error){
-                        throw new Error(error.response ? error.response.data : error.menssage)
+                        throw new Error(error ? error : error.response ? error.response.data.message : error.menssage)
                     }
 
                 }

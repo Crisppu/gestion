@@ -30,7 +30,6 @@ export default function Page() {
         email:'',
         password:''
     }
-    
 
     return (
         <div className={`flex justify-center items-center min-h-screen ${modeSelector} dark:bg-black`}>
@@ -52,7 +51,7 @@ export default function Page() {
                                     email:values.email,
                                     password:values.password,
                                     redirect:false
-                                })
+                                });
                                 if(response.error){
                                     setError(response.error)
                                 }else{
