@@ -1,6 +1,5 @@
 'use client'
-import SvgComponentEye from '@/components/ui/svgComponents/svgComponentEye';
-import SvgComponentEyeSlash from '@/components/ui/svgComponents/svgComponentEyeSlash';
+import {EyeIcon, EyeSlashIcon} from '@heroicons/react/24/outline'; //estos son iconos atraidos desde Tailwind
 import { ROLES } from '@/modelsOrientacionObjeto/roles.enum';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
 import { fetchCreateNewEmployeeTransaction } from '@/services/transaccionService/transiccionUsuarioAndEmpleadoApiService';
@@ -442,7 +441,7 @@ export default function Page() {
                                         type={showPassword ? "text" : "password"}
                                         className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
-                                    <span onClick={()=>setShowPassword(!showPassword)}  className='rounded border-2  bg-gray-200 w-10  flex items-center justify-center cursor-pointer'>{showPassword ? <SvgComponentEye></SvgComponentEye> : <SvgComponentEyeSlash></SvgComponentEyeSlash>}</span>
+                                    <span onClick={()=>setShowPassword(!showPassword)}  className='rounded border-2  bg-gray-200 w-8  flex items-center justify-center cursor-pointer'>{showPassword ? <EyeIcon className='text-black'></EyeIcon> : <EyeSlashIcon className='text-black'></EyeSlashIcon>}</span>
                                 </div>
                                 {errors.contrasenia && touched.contrasenia && (
                                     <div className='text-red-700 text-sm'>
@@ -459,7 +458,7 @@ export default function Page() {
                                         type={showConfirmPassword ? "text" : "password"}
                                         className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
-                                    <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}  className='rounded border-2  bg-gray-200 w-10  flex items-center justify-center cursor-pointer'>{showConfirmPassword ? <SvgComponentEye></SvgComponentEye> : <SvgComponentEyeSlash></SvgComponentEyeSlash>}</span>
+                                    <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}  className='rounded border-2  bg-gray-200 w-8  flex items-center justify-center cursor-pointer'>{showConfirmPassword ? <EyeIcon className='text-black'></EyeIcon> : <EyeSlashIcon className='text-black'></EyeSlashIcon>}</span>
 
                                 </div>
                                 {errors.confirmar_contrasenia && touched.confirmar_contrasenia && (
