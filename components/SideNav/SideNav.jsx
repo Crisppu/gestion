@@ -2,11 +2,10 @@
 import Link from 'next/link';
 import NavLinks from './NavLinks';
 import { ChevronDoubleRightIcon} from '@heroicons/react/24/outline';
-import { selectArrowSideNav, setArrowSideNav } from '@/redux/features/arrowSideNavSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { setArrowSideNav } from '@/redux/features/arrowSideNavSlice';
+import { useDispatch} from 'react-redux';
 
 export default function SideNav () {
-    const arrowState = useSelector(selectArrowSideNav);
     const dispatch = useDispatch();
     return (
         <div className={`flex items-center w-full transition-all duration-300 ${arrowState ? 'md:w-[90px]' : 'md:w-72'}`}>
@@ -20,7 +19,7 @@ export default function SideNav () {
                     </Link>
                 </div>
                 <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
-                    <NavLinks useSelectorArrow={arrowState}></NavLinks>
+                    <NavLinks></NavLinks>
                     <div className="hidden h-auto w-full grow rounded-md bg-gray-100 dark:bg-black  md:block"></div>
                 </div>
             </div>

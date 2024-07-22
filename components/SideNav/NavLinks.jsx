@@ -1,7 +1,9 @@
 'use client' //el pathname solo lo nodemon recuperar en el cliente y no en el servidor por lo tanto se escribe 'use client'
+import { selectArrowSideNav } from '@/redux/features/arrowSideNavSlice';
 import {UserGroupIcon, HomeIcon,DocumentDuplicateIcon,} from '@heroicons/react/24/outline'; //estos son iconos atraidos desde Tailwind
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
+import { useSelector } from 'react-redux';
 
 
 const links = [
@@ -14,6 +16,8 @@ const links = [
 
 export default function NavLinks({useSelectorArrow}) {
     const pathname=usePathname(); //'/dashboard/invoices' me envia el enlace en donde esta actualmente
+    const arrowState = useSelector(selectArrowSideNav);
+
     return (
         <>
             {links.map((link) => {
@@ -27,7 +31,7 @@ export default function NavLinks({useSelectorArrow}) {
                         }
                     >
                         <LinkIcon className="w-6" />
-                        <p className={`hidden transition-all duration-300 ${useSelectorArrow ? 'hidden':'md:block '}`}>{link.name}</p>
+                        <p className={`hidden transition-all duration-300 ${arrowState ? 'hidden':'md:block '}`}>{link.name}</p>
                     </Link>
                 );
             })
