@@ -1,3 +1,4 @@
+import ThemeProvider from "@/components/theme/ThemeProvider";
 import "./globals.css";
 import Providers from "@/redux/providers";
 
@@ -14,7 +15,9 @@ export default function RootLayout({ children}) {
     </head>
       <body>
         <Providers>
-          {children}
+            <ThemeProvider>
+            {children}
+            </ThemeProvider>
         </Providers>
       </body>
     </html>
