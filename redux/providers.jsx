@@ -12,7 +12,7 @@ export function Providers({children}) {
     return (
         <NextUIProvider>
             <Provider store={store}>
-                <PersistGate persistor={persistor}>
+                <PersistGate loading={null} persistor={persistor}>
                     <SessionProvider>
                         {children}
                     </SessionProvider>
