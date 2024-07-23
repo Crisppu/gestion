@@ -9,6 +9,9 @@ import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import { persistReducer, FLUSH, REHYDRATE,PAUSE, PERSIST, PURGE, REGISTER} from "redux-persist";
 
 import { thunk } from "redux-thunk";
+import thunkMiddleware from 'redux-thunk'
+
+
 
 const createNoopStore = () =>{
     return {
@@ -41,15 +44,11 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
     reducer:persistedReducer,
-    middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }).concat(thunk),
+   
 })
 
 /**
+ * TODO: esta parte es por si tengo que reducer de tipo async
  * middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
                 serializableCheck: {
