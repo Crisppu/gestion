@@ -1,6 +1,6 @@
 'use client' //el pathname solo lo nodemon recuperar en el cliente y no en el servidor por lo tanto se escribe 'use client'
 import { selectArrowSideNav } from '@/redux/features/arrowSideNavSlice';
-import {UserGroupIcon, HomeIcon,DocumentDuplicateIcon,} from '@heroicons/react/24/outline'; //estos son iconos atraidos desde Tailwind
+import {UserGroupIcon, HomeIcon,DocumentDuplicateIcon,ClipboardDocumentListIcon,} from '@heroicons/react/24/outline'; //estos son iconos atraidos desde Tailwind
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import { useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 
 const links = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
+  {name: 'Pagos',href: '/dashboard/pagos',icon: ClipboardDocumentListIcon },
   {name: 'Invoices',href: '/dashboard/prueba',icon: DocumentDuplicateIcon },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
 ];
