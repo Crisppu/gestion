@@ -18,11 +18,12 @@ import {
   Chip,
   User,
   Pagination,
+  DropdownSection,
 } from "@nextui-org/react";
 
 //import {columns, users, statusOptions} from "./_data";
 //import {capitalize} from "./_utils";
-import { columns, users, statusOptions} from "./_data/_data";
+import { columns, users, statusOptions, columnsTable} from "./_data/_data";
 import { capitalize } from "./_data/_utils";
 
 const statusColorMap = {
@@ -36,7 +37,7 @@ const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
 export function TablaPagos() {
     const [filterValue, setFilterValue] = useState("");
     const [selectedKeys, setSelectedKeys] = useState(new Set([]));
-    const [visibleColumns, setVisibleColumns] = useState(new Set(INITIAL_VISIBLE_COLUMNS));
+    const [visibleColumns, setVisibleColumns] = useState(INITIAL_VISIBLE_COLUMNS);
     const [statusFilter, setStatusFilter] = useState("all");
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [sortDescriptor, setSortDescriptor] = useState({
@@ -46,98 +47,104 @@ export function TablaPagos() {
     const [page, setPage] = useState(1);
 
     const hasSearchFilter = Boolean(filterValue);
+    const [stateButtonAll, setStateButtonAll] = useState(false);
 
     const headerColumns = React.useMemo(() => {
-        if (visibleColumns === "all") return columns;
-        const filterColumns = columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+        console.log(visibleColumns);
+        if (visibleColumns.includes('all')) {
+            // setVisibleColumns(["id", "name","age", "role","team","email", "status", "actions","all"]);
+            return columns
+        };
+        const filterColumns = columns.filter((column) =>{return visibleColumns.includes(column.uid)});
+        console.log(filterColumns)
         return filterColumns;
     }, [visibleColumns]);
 
     const filteredItems = React.useMemo(() => {
         let filteredUsers = [...users];
-        console.log(hasSearchFilter)
+        //console.log(hasSearchFilter)
         if (hasSearchFilter) {
             filteredUsers = filteredUsers.filter((user) =>
-            user.name.toLowerCase().includes(filterValue.toLowerCase()),
-        );
-        console.log(filterValue)
+                user.name.toLowerCase().includes(filterValue.toLowerCase()),
+            );
+            console.log(filterValue)
         }
 
         if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
             filteredUsers = filteredUsers.filter((user) =>
-            Array.from(statusFilter).includes(user.status),
-        );
-        console.log(filteredUsers)
+                Array.from(statusFilter).includes(user.status),
+            );
+            console.log(filteredUsers)
         }
 
         return filteredUsers;
     }, [ filterValue, statusFilter,hasSearchFilter]);
 
-  const pages = Math.ceil(filteredItems.length / rowsPerPage);
+    const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+    const items = React.useMemo(() => {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
 
-    return filteredItems.slice(start, end);
-  }, [page, filteredItems, rowsPerPage]);
+        return filteredItems.slice(start, end);
+    }, [page, filteredItems, rowsPerPage]);
 
-  const sortedItems = React.useMemo(() => {
-    return [...items].sort((a, b) => {
-      const first = a[sortDescriptor.column];
-      const second = b[sortDescriptor.column];
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
+    const sortedItems = React.useMemo(() => {
+        return [...items].sort((a, b) => {
+        const first = a[sortDescriptor.column];
+        const second = b[sortDescriptor.column];
+        const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
-  }, [sortDescriptor, items]);
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+        });
+    }, [sortDescriptor, items]);
 
     const renderCell = React.useCallback((user, columnKey) => {
         const cellValue = user[columnKey];
 
         switch (columnKey) {
-        case "name":
-            return (
-                <User
-                    className=""
-                    avatarProps={{radius: "lg", src: user.avatar}}
-                    description={user.email}
-                    name={cellValue}
-                >
-                    {user.email}
-                </User>
-            );
-        case "role":
-            return (
-                <div className="flex flex-col ">
-                    <p className="text-bold text-small capitalize">{cellValue}</p>
-                    <p className="text-bold text-tiny capitalize text-default-400">{user.team}</p>
+            case "name":
+                return (
+                    <User
+                        className=""
+                        avatarProps={{radius: "lg", src: user.avatar}}
+                        description={user.email}
+                        name={cellValue}
+                    >
+                        {user.email}
+                    </User>
+                );
+            case "role":
+                return (
+                    <div className="flex flex-col ">
+                        <p className="text-bold text-small capitalize">{cellValue}</p>
+                        <p className="text-bold text-tiny capitalize text-default-400">{user.team}</p>
+                    </div>
+                );
+            case "status":
+                return (
+                    <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
+                        {cellValue}
+                    </Chip>
+                );
+            case "actions":
+                return (
+                <div className="relative flex justify-end items-center gap-2 ">
+                    <Dropdown>
+                    <DropdownTrigger >
+                        <Button isIconOnly size="sm" variant="light">
+                        <EllipsisVerticalIcon className="text-default-300 w-6" />
+                        </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu className="text-black dark:text-white">
+                        <DropdownItem>View</DropdownItem>
+                        <DropdownItem>Edit</DropdownItem>
+                        <DropdownItem>Delete</DropdownItem>
+                    </DropdownMenu>
+                    </Dropdown>
                 </div>
-            );
-        case "status":
-            return (
-                <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
-                    {cellValue}
-                </Chip>
-            );
-        case "actions":
-            return (
-            <div className="relative flex justify-end items-center gap-2 ">
-                <Dropdown>
-                <DropdownTrigger >
-                    <Button isIconOnly size="sm" variant="light">
-                    <EllipsisVerticalIcon className="text-default-300 w-6" />
-                    </Button>
-                </DropdownTrigger>
-                <DropdownMenu className="text-black dark:text-white">
-                    <DropdownItem>View</DropdownItem>
-                    <DropdownItem>Edit</DropdownItem>
-                    <DropdownItem>Delete</DropdownItem>
-                </DropdownMenu>
-                </Dropdown>
-            </div>
-            );
-        default:
+                );
+            default:
             return cellValue;
         }
     }, []);
@@ -175,117 +182,149 @@ export function TablaPagos() {
 
     const topContent = React.useMemo(() => {
         return (
-        <div className="flex flex-col gap-4">
-            <div className="flex justify-between gap-3 items-end">
-            <Input
-                isClearable
-                className="w-full sm:max-w-[44%] text-black dark:text-white"
-                placeholder="Search by name..."
-                startContent={<MagnifyingGlassIcon className="w-6 "/>}
-                value={filterValue}
-                onClear={() => onClear()}
-                onValueChange={onSearchChange}
-            />
-            <div className="flex gap-3">
-                <Dropdown>
-                <DropdownTrigger className="hidden sm:flex ">
-                    <Button endContent={<ChevronDownIcon className="text-small w-5" />} variant="flat">
-                    Status
-                    </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                    disallowEmptySelection
-                    aria-label="Table Columns"
-                    closeOnSelect={false}
-                    selectedKeys={statusFilter}
-                    selectionMode="multiple"
-                    onSelectionChange={setStatusFilter}
-                >
-                    {statusOptions.map((status) => (
-                    <DropdownItem key={status.uid} className="capitalize text-black">
-                        {capitalize(status.name)}
-                    </DropdownItem>
-                    ))}
-                </DropdownMenu>
-                </Dropdown>
-                <Dropdown>
-                <DropdownTrigger className="hidden sm:flex">
-                    <Button endContent={<ChevronDownIcon className="text-small w-5" />} variant="flat">
-                    Columns
-                    </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                    disallowEmptySelection
-                    aria-label="Table Columns"
-                    closeOnSelect={false}
-                    selectedKeys={visibleColumns}
-                    selectionMode="multiple"
-                    onSelectionChange={setVisibleColumns}
-                >
-                    {columns.map((column) => (
-                    <DropdownItem key={column.uid} className="capitalize text-black">
-                        {capitalize(column.name)}
-                    </DropdownItem>
-                    ))}
-                </DropdownMenu>
-                </Dropdown>
-                <Button color="primary" endContent={<PlusIcon />}>
-                Add New
-                </Button>
+            <div className="flex flex-col gap-4">
+                <div className="flex justify-between gap-3 items-end">
+                    <Input
+                        isClearable
+                        className="w-full sm:max-w-[44%] text-black dark:text-white"
+                        placeholder="Search by name..."
+                        startContent={<MagnifyingGlassIcon className="w-6 "/>}
+                        value={filterValue}
+                        onClear={() => onClear()}
+                        onValueChange={onSearchChange}
+                    />
+                    <div className="flex gap-3">
+                        <Dropdown>
+                            <DropdownTrigger className="hidden sm:flex ">
+                                <Button endContent={<ChevronDownIcon className="text-small w-5" />} variant="flat">
+                                Status
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                                disallowEmptySelection
+                                aria-label="Table Columns"
+                                closeOnSelect={false}
+                                selectedKeys={statusFilter}
+                                selectionMode="multiple"
+                                onSelectionChange={setStatusFilter}
+                            >
+                                {statusOptions.map((status) => (
+                                    <DropdownItem key={status.uid} className="capitalize text-black">
+                                        {capitalize(status.name)}
+                                    </DropdownItem>
+                                ))}
+
+                            </DropdownMenu>
+                        </Dropdown>
+                        <Dropdown>
+                            <DropdownTrigger className="hidden sm:flex">
+                                <Button endContent={<ChevronDownIcon className="text-small w-5" />} variant="flat">
+                                Columns
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                            //disabledKeys={stateButtonAll ? ['id', 'name','age', 'role','team','email', 'status', 'actions'] : null}
+                            disallowEmptySelection
+                            aria-label="Table Columns"
+                            closeOnSelect={false}
+                            selectedKeys={visibleColumns}
+                            selectionMode="multiple"
+                            onSelectionChange={(state)=>{
+                                const valuesArray = Array.from(state)
+                                //console.log(valuesArray)
+                                setVisibleColumns(valuesArray);
+                            }}
+                            >
+                                <DropdownSection  title="Por Columnas" showDivider>
+                                    {columnsTable.map((column) => (
+                                        <DropdownItem isDisabled={stateButtonAll} key={column.uid} className="capitalize text-black">
+                                            {capitalize(column.name)}
+                                        </DropdownItem>
+                                    ))}
+                                </DropdownSection>
+                                <DropdownItem
+                                    key="all"
+                                    className="text-success"
+                                    color="success"
+                                    description="Mostrar Todas las Columnas"
+                                    onClick={()=>{
+                                        if(stateButtonAll){
+                                            //console.log('mostrar menos')
+                                            setVisibleColumns(INITIAL_VISIBLE_COLUMNS)
+                                            setStateButtonAll((s)=>!s)
+                                        }else{
+                                            //console.log('mostrar todos')
+                                            const listaTemporal = ["all"];
+                                            columns.forEach(column => {
+                                                listaTemporal.push(column.uid)
+                                            });
+                                            setVisibleColumns(listaTemporal)
+                                            setStateButtonAll((s)=>!s)
+                                        }
+                                    }}
+                                    >
+                                    {stateButtonAll ? 'Mostrar Menos' : 'Mostrar Todos'}
+                                </DropdownItem>
+
+                            </DropdownMenu>
+                        </Dropdown>
+                        <Button color="primary" endContent={<PlusIcon />}>
+                            Add New
+                        </Button>
+                    </div>
+                </div>
+                <div className="flex justify-between items-center">
+                    <span className="text-default-400 text-small">Total {users.length} users</span>
+                    <label className="flex items-center text-default-400 text-small">
+                        Rows per page:
+                        <select
+                        className="bg-transparent outline-none text-default-400 text-small"
+                        onChange={onRowsPerPageChange}
+                        >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        </select>
+                    </label>
+                </div>
             </div>
-            </div>
-            <div className="flex justify-between items-center">
-            <span className="text-default-400 text-small">Total {users.length} users</span>
-            <label className="flex items-center text-default-400 text-small">
-                Rows per page:
-                <select
-                className="bg-transparent outline-none text-default-400 text-small"
-                onChange={onRowsPerPageChange}
-                >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                </select>
-            </label>
-            </div>
-        </div>
         );
     }, [
         filterValue,
         statusFilter,
         visibleColumns,
         onRowsPerPageChange,
-
+        stateButtonAll,
         onSearchChange,
         onClear,
     ]);
 
     const bottomContent = React.useMemo(() => {
         return (
-        <div className="py-2 px-2 flex justify-between items-center">
-            <span className="w-[30%] text-small text-default-400">
-            {selectedKeys === "all"
-                ? "All items selected"
-                : `${selectedKeys.size} of ${filteredItems.length} selected`}
-            </span>
-            <Pagination
-            isCompact
-            showControls
-            showShadow
-            color="primary"
-            page={page}
-            total={pages}
-            onChange={setPage}
-            />
-            <div className="hidden sm:flex w-[30%] justify-end gap-2">
-            <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
-                Previous
-            </Button>
-            <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
-                Next
-            </Button>
+            <div className="py-2 px-2 flex justify-between items-center">
+                <span className="w-[30%] text-small text-default-400">
+                {selectedKeys === "all"
+                    ? "All items selected"
+                    : `${selectedKeys.size} of ${filteredItems.length} selected`}
+                </span>
+                <Pagination
+                isCompact
+                showControls
+                showShadow
+                color="primary"
+                page={page}
+                total={pages}
+                onChange={setPage}
+                />
+                <div className="hidden sm:flex w-[30%] justify-end gap-2">
+                    <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+                        Previous
+                    </Button>
+                    <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+                        Next
+                    </Button>
+                </div>
             </div>
-        </div>
         );
     }, [selectedKeys,  page, pages,onNextPage,onPreviousPage,filteredItems.length]);
 
@@ -295,9 +334,7 @@ export function TablaPagos() {
         isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
-        classNames={{
-            wrapper: "max-h-[382px] text-black dark:text-white",
-        }}
+        classNames={{wrapper: "max-h-[382px] text-black dark:text-white",}}
         selectedKeys={selectedKeys}
         selectionMode="multiple"
         sortDescriptor={sortDescriptor}
@@ -306,24 +343,25 @@ export function TablaPagos() {
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
         >
-        <TableHeader columns={headerColumns}>
-            {(column) => (
-            <TableColumn
-                key={column.uid}
-                align={column.uid === "actions" ? "center" : "start"}
-                allowsSorting={column.sortable}
-            >
-                {column.name}
-            </TableColumn>
-            )}
-        </TableHeader>
-        <TableBody emptyContent={"No users found"} items={sortedItems}>
-            {(item) => (
-            <TableRow key={item.id}>
-                {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-            </TableRow>
-            )}
-        </TableBody>
+            <TableHeader columns={headerColumns}>
+
+                {(column) => (
+                    <TableColumn
+                        key={column.uid}
+                        align={column.uid === "actions" ? "center" : "start"}
+                        allowsSorting={column.sortable}
+                    >
+                        {column.name}
+                    </TableColumn>
+                )}
+            </TableHeader>
+            <TableBody emptyContent={"No users found"} items={sortedItems}>
+                {(item) => (
+                    <TableRow key={item.id}>
+                        {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                    </TableRow>
+                )}
+            </TableBody>
         </Table>
     );
 }
