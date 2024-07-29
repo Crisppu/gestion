@@ -15,8 +15,8 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Chip,
-  User,
+//   Chip,
+//   User,
   Pagination,
   DropdownSection,
 } from "@nextui-org/react";
@@ -25,19 +25,21 @@ import {
 //import {capitalize} from "./_utils";
 import { columns, users, statusOptions, columnsTable} from "./_data/_data";
 import { capitalize } from "./_data/_utils";
+import { columnsPagos} from "./dataPagos/data";
 
-const statusColorMap = {
-  active: "success",
-  paused: "danger",
-  vacation: "warning",
-};
+// const statusColorMap = {
+//   active: "success",
+//   paused: "danger",
+//   vacation: "warning",
+// };
 
-const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
+//const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS_PAGOS = ["id","fechapago","salariobase","horasextras","totalhorasextras","descuentos","id_usuario","actions"];
 
-export function TablaPagos() {
+export function TablaPagos({dataPagos}) {
     const [filterValue, setFilterValue] = useState("");
     const [selectedKeys, setSelectedKeys] = useState(new Set([]));
-    const [visibleColumns, setVisibleColumns] = useState(INITIAL_VISIBLE_COLUMNS);
+    const [visibleColumns, setVisibleColumns] = useState(INITIAL_VISIBLE_COLUMNS_PAGOS);
     const [statusFilter, setStatusFilter] = useState("all");
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [sortDescriptor, setSortDescriptor] = useState({
@@ -45,23 +47,24 @@ export function TablaPagos() {
         direction: "ascending",
     });
     const [page, setPage] = useState(1);
+    console.log(selectedKeys)
 
     const hasSearchFilter = Boolean(filterValue);
     const [stateButtonAll, setStateButtonAll] = useState(false);
 
     const headerColumns = React.useMemo(() => {
-        console.log(visibleColumns);
+       // console.log(visibleColumns);
         if (visibleColumns.includes('all')) {
             // setVisibleColumns(["id", "name","age", "role","team","email", "status", "actions","all"]);
-            return columns
+            return columnsPagos
         };
-        const filterColumns = columns.filter((column) =>{return visibleColumns.includes(column.uid)});
-        console.log(filterColumns)
+        const filterColumns = columnsPagos.filter((columnPago) =>{return visibleColumns.includes(columnPago.uid)});
+        //console.log(filterColumns)
         return filterColumns;
     }, [visibleColumns]);
 
     const filteredItems = React.useMemo(() => {
-        let filteredUsers = [...users];
+        let filteredUsers = [...dataPagos];
         //console.log(hasSearchFilter)
         if (hasSearchFilter) {
             filteredUsers = filteredUsers.filter((user) =>
@@ -76,60 +79,100 @@ export function TablaPagos() {
             );
             console.log(filteredUsers)
         }
+        console.log(filteredUsers)
 
         return filteredUsers;
-    }, [ filterValue, statusFilter,hasSearchFilter]);
+    }, [ filterValue, statusFilter,hasSearchFilter,dataPagos]);
 
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
     const items = React.useMemo(() => {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
+        const resultado = filteredItems.slice(start, end);
+        console.log(resultado)
 
-        return filteredItems.slice(start, end);
+        return resultado;
     }, [page, filteredItems, rowsPerPage]);
 
     const sortedItems = React.useMemo(() => {
-        return [...items].sort((a, b) => {
-        const first = a[sortDescriptor.column];
-        const second = b[sortDescriptor.column];
-        const cmp = first < second ? -1 : first > second ? 1 : 0;
+        const list = [...items]
+        //console.log(list)
+        const ordenar = [...items].sort((a, b) => {
+            const first = a[sortDescriptor.column];
+            const second = b[sortDescriptor.column];
+            const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+            return sortDescriptor.direction === "descending" ? -cmp : cmp;
         });
+        console.log(ordenar)
+        return ordenar
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((user, columnKey) => {
-        const cellValue = user[columnKey];
+    const renderCell = React.useCallback((pagoData, columnKey) => {
+        //console.log(pagoData)
+        //console.log(columnKey)
+        const cellValue = pagoData[columnKey];
+        //console.log(cellValue)
 
         switch (columnKey) {
-            case "name":
+                case"id":
+                    return (
+                        <div className="text-justify">
+                            <p className="text-bold text-small capitalize">{cellValue}</p>
+                        </div>
+                    );
+                case "fechapago":
+                    const dateFechaPago = new Date(cellValue);
+                    const formattedDateFechaPago = dateFechaPago.toISOString().split('T')[0];
+                    return (
+                        <div>
+                            <p className="text-bold text-small capitalize ">{formattedDateFechaPago}</p>
+                        </div>
+                    );
+            case "salariobase":
                 return (
-                    <User
-                        className=""
-                        avatarProps={{radius: "lg", src: user.avatar}}
-                        description={user.email}
-                        name={cellValue}
-                    >
-                        {user.email}
-                    </User>
-                );
-            case "role":
-                return (
-                    <div className="flex flex-col ">
-                        <p className="text-bold text-small capitalize">{cellValue}</p>
-                        <p className="text-bold text-tiny capitalize text-default-400">{user.team}</p>
+                    <div>
+                        <p className="text-bold text-small capitalize">Q {cellValue}</p>
                     </div>
                 );
-            case "status":
+            case "descuentos":
                 return (
-                    <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
-                        {cellValue}
-                    </Chip>
+                    <div>
+                        <p className="text-bold text-small capitalize">Q {cellValue}</p>
+                    </div>
+                );
+            case "salarioneto":
+                return (
+                    <div>
+                        <p className="text-bold text-small capitalize">Q {cellValue}</p>
+                    </div>
+                );
+            case "id_usuario":
+                return (
+                    <div className="text-justify">
+                        <p className="text-bold text-small capitalize">{cellValue}</p>
+                    </div>
+                );
+            case "createdat":
+                const dateCreatedat = new Date(cellValue);
+                const formattedDateCreatedat = dateCreatedat.toISOString().split('T')[0];
+                return (
+                    <div>
+                        <p className="text-bold text-small capitalize ">{formattedDateCreatedat}</p>
+                    </div>
+                );
+            case "updatedat":
+                const dateUpdatedat = new Date(cellValue);
+                const formattedDateUpdatedat = dateUpdatedat.toISOString().split('T')[0];
+                return (
+                    <div>
+                        <p className="text-bold text-small capitalize ">{formattedDateUpdatedat}</p>
+                    </div>
                 );
             case "actions":
                 return (
-                <div className="relative flex justify-end items-center gap-2 ">
+                <div className="relative flex justify-center items-center gap-2 ">
                     <Dropdown>
                     <DropdownTrigger >
                         <Button isIconOnly size="sm" variant="light">
@@ -235,8 +278,8 @@ export function TablaPagos() {
                                 setVisibleColumns(valuesArray);
                             }}
                             >
-                                <DropdownSection  title="Por Columnas" showDivider>
-                                    {columnsTable.map((column) => (
+                                <DropdownSection  title="Por Columnas" showDivider className="h-52 overflow-y-auto">
+                                    {columnsPagos.map((column) => (
                                         <DropdownItem isDisabled={stateButtonAll} key={column.uid} className="capitalize text-black">
                                             {capitalize(column.name)}
                                         </DropdownItem>
@@ -250,12 +293,12 @@ export function TablaPagos() {
                                     onClick={()=>{
                                         if(stateButtonAll){
                                             //console.log('mostrar menos')
-                                            setVisibleColumns(INITIAL_VISIBLE_COLUMNS)
+                                            setVisibleColumns(INITIAL_VISIBLE_COLUMNS_PAGOS)
                                             setStateButtonAll((s)=>!s)
                                         }else{
                                             //console.log('mostrar todos')
                                             const listaTemporal = ["all"];
-                                            columns.forEach(column => {
+                                            columnsPagos.forEach(column => {
                                                 listaTemporal.push(column.uid)
                                             });
                                             setVisibleColumns(listaTemporal)
@@ -274,7 +317,7 @@ export function TablaPagos() {
                     </div>
                 </div>
                 <div className="flex justify-between items-center">
-                    <span className="text-default-400 text-small">Total {users.length} users</span>
+                    <span className="text-default-400 text-small">Total: {dataPagos.length} Pagos</span>
                     <label className="flex items-center text-default-400 text-small">
                         Rows per page:
                         <select
@@ -297,6 +340,7 @@ export function TablaPagos() {
         stateButtonAll,
         onSearchChange,
         onClear,
+        dataPagos,
     ]);
 
     const bottomContent = React.useMemo(() => {
@@ -334,13 +378,15 @@ export function TablaPagos() {
         isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
-        classNames={{wrapper: "max-h-[382px] text-black dark:text-white",}}
+        classNames={{wrapper: "max-h-[600px] text-black dark:text-white",}}
         selectedKeys={selectedKeys}
         selectionMode="multiple"
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
-        onSelectionChange={setSelectedKeys}
+        onSelectionChange={(keyRow)=>{
+            setSelectedKeys(keyRow)
+        }} //valores que seleccionan dentro de la tabla
         onSortChange={setSortDescriptor}
         >
             <TableHeader columns={headerColumns}>
@@ -348,7 +394,7 @@ export function TablaPagos() {
                 {(column) => (
                     <TableColumn
                         key={column.uid}
-                        align={column.uid === "actions" ? "center" : "start"}
+                        align={"center"}
                         allowsSorting={column.sortable}
                     >
                         {column.name}

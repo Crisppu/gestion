@@ -3,10 +3,10 @@ import { fetchAllPayments } from '@/services/PagoService/PagoApiService'
 import React from 'react'
 
 export default async function PagosPage() {
-    const data = await fetchAllPayments();
-    //console.log(data)
+    const dataPagos = await fetchAllPayments();
+    //console.log(dataPagos)
     return (
-        <TablaPagos></TablaPagos>
+        <TablaPagos dataPagos={dataPagos}></TablaPagos>
     )
 }
 
