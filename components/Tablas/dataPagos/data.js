@@ -11,7 +11,7 @@ export const columnsPagos = [
     {name:"Fecha_Creacion",uid:"createdat",},
     {name:"ModificadoPor",uid:"updateBy",},
     {name:"Fecha_Modificacion",uid:"updatedAt",},
-    {name: "ACTIONS", uid: "actions"}
+    {name: "ACCIONES", uid: "acciones"}
 ]
 export const dataPagos = [
     {id: 1,fechapago: "2023-01-01",salariobase: 2000,horasextras: 4,totalhorasextras: 4,descuentos: 200,salarioneto: 900,id_usuario: "1",createBy: "messi",createdAt: "2023-01-01",updateBy: "null",updatedAt: "null",},

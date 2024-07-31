@@ -26,6 +26,8 @@ import {
 import { columns, users, statusOptions, columnsTable} from "./_data/_data";
 import { capitalize } from "./_data/_utils";
 import { columnsPagos} from "./dataPagos/data";
+import Form from "../borrarForm/Form";
+import FormikPayments from "../formik/formikPagos/FormikPayments";
 
 // const statusColorMap = {
 //   active: "success",
@@ -34,7 +36,7 @@ import { columnsPagos} from "./dataPagos/data";
 // };
 
 //const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
-const INITIAL_VISIBLE_COLUMNS_PAGOS = ["id","fechapago","salariobase","horasextras","totalhorasextras","descuentos","id_usuario","actions"];
+const INITIAL_VISIBLE_COLUMNS_PAGOS = ["id","fechapago","salariobase","horasextras","totalhorasextras","descuentos","id_usuario","acciones"];
 
 export function TablaPagos({dataPagos}) {
     const [filterValue, setFilterValue] = useState("");
@@ -51,6 +53,23 @@ export function TablaPagos({dataPagos}) {
 
     const hasSearchFilter = Boolean(filterValue);
     const [stateButtonAll, setStateButtonAll] = useState(false);
+
+    const [showForm, setShowForm] = useState(false);
+    const toggleForm =  React.useCallback(()=>{
+        setShowForm(!showForm);
+    },[showForm]);
+    
+
+    //TODO: funcionalidad de eliminar todos los items seleccionados Pendiente
+    const BotonEliminarSeleccionados =  React.useCallback(()=>{
+        if(selectedKeys === "all"){
+            console.log("eliminar todo los filas con ALL");
+        }else{
+            const valuesArray = Array.from(selectedKeys)
+            console.log('eliminar todos los filas ALLSeleccionandos: ', valuesArray)
+        }
+       //return null;
+    }, [selectedKeys]);
 
     const headerColumns = React.useMemo(() => {
        // console.log(visibleColumns);
@@ -79,7 +98,7 @@ export function TablaPagos({dataPagos}) {
             );
             console.log(filteredUsers)
         }
-        console.log(filteredUsers)
+        console.log(filteredUsers.length)
 
         return filteredUsers;
     }, [ filterValue, statusFilter,hasSearchFilter,dataPagos]);
@@ -170,7 +189,7 @@ export function TablaPagos({dataPagos}) {
                         <p className="text-bold text-small capitalize ">{formattedDateUpdatedat}</p>
                     </div>
                 );
-            case "actions":
+            case "acciones":
                 return (
                 <div className="relative flex justify-center items-center gap-2 ">
                     <Dropdown>
@@ -262,7 +281,7 @@ export function TablaPagos({dataPagos}) {
                         <Dropdown>
                             <DropdownTrigger className="hidden sm:flex">
                                 <Button endContent={<ChevronDownIcon className="text-small w-5" />} variant="flat">
-                                Columns
+                                Columnas
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -311,13 +330,20 @@ export function TablaPagos({dataPagos}) {
 
                             </DropdownMenu>
                         </Dropdown>
-                        <Button color="primary" endContent={<PlusIcon />}>
-                            Add New
+                        <Button color="primary" endContent={<PlusIcon className="text-small w-5"/>} onClick={toggleForm}>
+                            Añadir nuevo pago
                         </Button>
                     </div>
                 </div>
                 <div className="flex justify-between items-center">
-                    <span className="text-default-400 text-small">Total: {dataPagos.length} Pagos</span>
+                    <div className="flex gap-2 items-center">
+                        <div>
+                            <span className="text-default-400 text-small">Total: {dataPagos.length} Pagos</span>
+                        </div>
+                        {selectedKeys === "all" || filteredItems.length === selectedKeys.size
+                            ? (<Button onClick={()=>BotonEliminarSeleccionados()}>Eliminar Todo</Button>)
+                            : null}
+                        </div>
                     <label className="flex items-center text-default-400 text-small">
                         Rows per page:
                         <select
@@ -341,6 +367,12 @@ export function TablaPagos({dataPagos}) {
         onSearchChange,
         onClear,
         dataPagos,
+        selectedKeys,
+        filteredItems.length,
+        BotonEliminarSeleccionados,
+        
+        toggleForm,
+        
     ]);
 
     const bottomContent = React.useMemo(() => {
@@ -373,7 +405,8 @@ export function TablaPagos({dataPagos}) {
     }, [selectedKeys,  page, pages,onNextPage,onPreviousPage,filteredItems.length]);
 
     return (
-        <Table
+        <div>
+            <Table
         aria-label="Example table with custom cells, pagination and sorting"
         isHeaderSticky
         bottomContent={bottomContent}
@@ -409,6 +442,8 @@ export function TablaPagos({dataPagos}) {
                 )}
             </TableBody>
         </Table>
+        {showForm && <FormikPayments toggleForm={toggleForm}></FormikPayments>}
+        </div>
     );
 }
 
