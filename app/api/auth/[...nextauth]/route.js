@@ -46,13 +46,13 @@ export const authOptions = {
     */
     session: {
         strategy: 'jwt',
-        maxAge: 24 * 60 * 60, // 1 day in seconds
+        maxAge: 7 * 24 * 60 * 60, // 1 week in seconds
     },
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
                 token.user = user;
-                token.expires = Math.floor(Date.now() / 1000) + 24 * 60 * 60; // 1 day in seconds
+                token.expires = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60; // 1 week in seconds
             }
             return token;
         },
