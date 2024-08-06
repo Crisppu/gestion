@@ -4,7 +4,7 @@ async function seedCreateRoles(client) {
         await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS Roles (
-                id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                 nombre VARCHAR(40) NOT NULL UNIQUE
             );
         `;
@@ -23,7 +23,7 @@ async function seedCreateUsuarios(client){
             CREATE TABLE IF NOT EXISTS Usuarios(
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
                 correo VARCHAR(30) NOT NULL UNIQUE,
-                contrasenia VARCHAR(40) NOT NULL
+                contrasenia VARCHAR(80) NOT NULL
             );
         `;
         console.log(`Created "Usuarios" table`);
@@ -35,6 +35,24 @@ async function seedCreateUsuarios(client){
     }
 
 };
+
+async function seedCreateProfesiones(client) {
+    try {
+        await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+        const createTable = await client.sql`
+            CREATE TABLE IF NOT EXISTS Profesiones (
+                id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                nombre VARCHAR(50) NOT NULL UNIQUE
+            );
+        `;
+        console.log(`Created "Profesiones" table`);
+        return {createTable}
+    }catch (error) {
+        console.error('Error creating Profesiones:', error);
+        throw error;
+    }
+};
+//insert into "Profesiones" (nombre_profesion, salario_base) values ('Administrador', 10000);
 
 async function seedCreateEmpleados(client) {
    try {
@@ -48,24 +66,24 @@ async function seedCreateEmpleados(client) {
                 apellido VARCHAR(30) NOT NULL,
                 telefono VARCHAR(20) NOT NULL,
                 direccion VARCHAR(50) NOT NULL,
-                genero INT NOT NULL CHECK (genero IN (0, 1)),
+                genero INT NOT NULL CHECK (genero IN (0, 1, 2)),
                 fecha_nacimiento DATE NOT NULL,
                 estado_civil INT NOT NULL CHECK (estado_civil IN (0, 1, 2, 3)),
-                profesion VARCHAR(50) NOT NULL,
+                id_profesion INTEGER NOT NULL,
+                FOREIGN KEY (id_profesion) REFERENCES Profesiones(id) ON DELETE SET NULL,
+                salario_base DECIMAL(10, 2) NOT NULL,
                 posicion VARCHAR(50) NOT NULL,
                 fecha_contratacion DATE NOT NULL,
                 departamento VARCHAR(60) NOT NULL,
-                id_rol UUID NOT NULL,
-                FOREIGN KEY (id_rol) REFERENCES Roles(id),
+                id_rol INTEGER NOT NULL,
+                FOREIGN KEY (id_rol) REFERENCES Roles(id) ON DELETE SET NULL,
                 id_usuario UUID NOT NULL,
-                FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+                FOREIGN KEY (id_usuario) REFERENCES Usuarios(id) ON DELETE CASCADE,
                 createBy UUID,
                 createdAt TIMESTAMP,
                 updateBy UUID,
                 updatedAt TIMESTAMP,
-                deletedBy UUID,
-                deletedAt TIMESTAMP,
-                isDeleted BOOLEAN DEFAULT true
+                status INT NOT NULL default 0 CHECK (status IN (0, 1, 2, 3))
             );
         `;
         console.log(`Created "Empleados" table`);
@@ -76,12 +94,15 @@ async function seedCreateEmpleados(client) {
     }
 };
 
+
 async function seedCreatePagos(client) {
     try {
         await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS Pagos (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                id_empleado UUID NOT NULL,
+                FOREIGN KEY (id_empleado) REFERENCES Empleados(id),
                 fechaPago DATE,
                 salarioBase DECIMAL(18,2),
                 horasExtras DECIMAL(18,2),
@@ -94,9 +115,7 @@ async function seedCreatePagos(client) {
                 createdAt TIMESTAMP,
                 updateBy UUID,
                 updatedAt TIMESTAMP,
-                deletedBy UUID,
-                deletedAt TIMESTAMP,
-                isDeleted BOOLEAN DEFAULT true
+                status INT NOT NULL default 0 CHECK (status IN (0, 1, 2, 3))
             );
         `;
         console.log(`Created "Pagos" table`);
@@ -114,6 +133,8 @@ async function seedCreateDescuentos(client) {
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS Descuentos (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                id_empleado UUID NOT NULL,
+                FOREIGN KEY (id_empleado) REFERENCES Empleados(id),
                 tipoDescuento VARCHAR(100),
                 monto DECIMAL(18,2),
                 fechaDescuento DATE,
@@ -123,9 +144,7 @@ async function seedCreateDescuentos(client) {
                 createdAt TIMESTAMP,
                 updateBy UUID,
                 updatedAt TIMESTAMP,
-                deletedBy UUID,
-                deletedAt TIMESTAMP,
-                isDeleted BOOLEAN DEFAULT true
+                status INT NOT NULL default 0 CHECK (status IN (0, 1, 2, 3))
             );
         `;
         console.log(`Created "Descuentos" table`);
@@ -142,6 +161,9 @@ async function seedCreateHorasExtras(client) {
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS HorasExtras (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                id_empleado UUID NOT NULL,
+                FOREIGN KEY (id_empleado) REFERENCES Empleados(id),
+                nombreJornada INT CHECK (nombreJornada IN (0, 1, 2, 3, 4)),
                 fecha DATE,
                 horasTrabajadas DECIMAL(18,2),
                 tasaPago DECIMAL(18,2),
@@ -152,9 +174,7 @@ async function seedCreateHorasExtras(client) {
                 createdAt TIMESTAMP,
                 updateBy UUID,
                 updatedAt TIMESTAMP,
-                deletedBy UUID,
-                deletedAt TIMESTAMP,
-                isDeleted BOOLEAN DEFAULT true
+                status INT NOT NULL default 0 CHECK (status IN (0, 1, 2, 3))
             );
         `;
         console.log(`Created "HorasExtras" table`);
@@ -171,6 +191,8 @@ async function seedCreateIndemnizaciones(client) {
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS Indemnitizaciones (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                id_empleado UUID NOT NULL,
+                FOREIGN KEY (id_empleado) REFERENCES Empleados(id),
                 fecha DATE,
                 monto DECIMAL(18,2),
                 motivo VARCHAR(255),
@@ -180,9 +202,7 @@ async function seedCreateIndemnizaciones(client) {
                 createdAt TIMESTAMP,
                 updateBy UUID,
                 updatedAt TIMESTAMP,
-                deletedBy UUID,
-                deletedAt TIMESTAMP,
-                isDeleted BOOLEAN DEFAULT true
+                status INT NOT NULL default 0 CHECK (status IN (0, 1, 2, 3))
             );
         `;
         console.log(`Created "Indemnitizaciones" table`);
@@ -199,6 +219,8 @@ async function seedCreateLiquidaciones(client) {
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS Liquidaciones (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                id_empleado UUID NOT NULL,
+                FOREIGN KEY (id_empleado) REFERENCES Empleados(id),
                 fecha DATE,
                 monto DECIMAL(18,2),
                 detalles VARCHAR(255),
@@ -208,9 +230,7 @@ async function seedCreateLiquidaciones(client) {
                 createdAt TIMESTAMP,
                 updateBy UUID,
                 updatedAt TIMESTAMP,
-                deletedBy UUID,
-                deletedAt TIMESTAMP,
-                isDeleted BOOLEAN DEFAULT true
+                status INT NOT NULL default 0 CHECK (status IN (0, 1, 2, 3))
             );
         `;
         console.log(`Created "Liquidaciones" table`);
@@ -227,6 +247,8 @@ async function seedCreateControlPagos(client) {
         const createTable = await client.sql`
             CREATE TABLE IF NOT EXISTS ControlPagos (
                 id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+                id_empleado UUID NOT NULL,
+                FOREIGN KEY (id_empleado) REFERENCES Empleados(id),
                 periodoInicio DATE,
                 periodoFin DATE,
                 salarioBruto DECIMAL(18,2),
@@ -238,9 +260,7 @@ async function seedCreateControlPagos(client) {
                 createdAt TIMESTAMP,
                 updateBy UUID,
                 updatedAt TIMESTAMP,
-                deletedBy UUID,
-                deletedAt TIMESTAMP,
-                isDeleted BOOLEAN DEFAULT true
+                status INT NOT NULL default 0 CHECK (status IN (0, 1, 2, 3))
             );
         `;
         console.log(`Created "ControlPagos" table`);
@@ -294,6 +314,7 @@ async function main(){
     const client = await db.connect();
     await seedCreateRoles(client);
     await seedCreateUsuarios(client);
+    await seedCreateProfesiones(client);
     await seedCreateEmpleados(client);
     await seedCreatePagos(client);
     await seedCreateDescuentos(client);

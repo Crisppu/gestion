@@ -12,7 +12,8 @@ export default async function createUserAndEmployeeController(req, res) {
         genero,
         fecha_nacimiento,
         estado_civil,
-        profesion,
+        id_profesion,
+        salario_base,
         posicion,
         fecha_contratacion,
         departamento,
@@ -25,7 +26,7 @@ export default async function createUserAndEmployeeController(req, res) {
         const response = await createUserAndEmployee({cui,nit,nombre
             ,apellido,telefono,direccion,
             genero,fecha_nacimiento,estado_civil,
-            profesion,posicion,fecha_contratacion,departamento,correo,contrasenia,id_rol
+            id_profesion,salario_base,posicion,fecha_contratacion,departamento,correo,contrasenia,id_rol
         });
 
         res.status(200).json({ message: 'Empleado creado exitosamente' ,data: response});

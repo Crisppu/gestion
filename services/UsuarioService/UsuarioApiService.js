@@ -1,4 +1,3 @@
-'use server'
 //Ruta API (API Route)
 import axios from 'axios';
 //crear un nuevo usuario

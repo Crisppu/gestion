@@ -1,5 +1,3 @@
-'use server'
-
 import { createUser, getUserByEmail } from "@/models/Usuario";
 //crud
 //TODO: Create - controller

@@ -1,4 +1,3 @@
-'use server'
 import { getUserByEmailController } from "@/controllers/UsuarioContoller";
 
 const userByEmailRequest = async (req, res) => {

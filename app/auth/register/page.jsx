@@ -2,7 +2,6 @@
 import {EyeIcon, EyeSlashIcon} from '@heroicons/react/24/outline'; //estos son iconos atraidos desde Tailwind
 import { ROLES } from '@/modelsOrientacionObjeto/roles.enum';
 import { selectDarkMode } from '@/redux/features/darkModeSlice';
-import { fetchCreateNewEmployeeTransaction } from '@/services/transaccionService/transiccionUsuarioAndEmpleadoApiService';
 import { fetchUserByEmail } from '@/services/UsuarioService/UsuarioApiService';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import Link from 'next/link';
@@ -11,6 +10,8 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import * as Yup from 'yup';
+import { PROFESIONES } from '@/modelsOrientacionObjeto/profesiones.num';
+import { fetchCreateNewEmployeeTransaction } from '@/services/transaccionService/transiccionUsuarioAndEmpleadoApiService';
 
 const registerSchema = Yup.object().shape(
   //shape: nos va permitir especificar la estructura de ese objeto
@@ -54,8 +55,11 @@ const registerSchema = Yup.object().shape(
         estado_civil: Yup.string()
         .oneOf(['0', '1', '2', '3'], 'Seleccione su estado civil')
         .required('El campo es obligatorio'),
-        profesion: Yup.string()
+        id_profesion: Yup.string()
         .required('El campo es obligatorio'),
+        salario_base: Yup.number()
+        .required('campo es obligatorio')
+        .positive('El salario base debe ser positivo'),
         posicion: Yup.string()
         .required('El campo es obligatorio'),
         fecha_contratacion: Yup.date()
@@ -75,7 +79,8 @@ const registerSchema = Yup.object().shape(
             return value === this.resolve(Yup.ref('contrasenia'));
         }).required('El campo es obligatorio'),
 
-        id_rol: Yup.string().oneOf([ROLES.USER, ROLES.ADMIN], 'Select a Rol'),
+        // id_rol: Yup.string().oneOf([ROLES.USER, ROLES.ADMIN], 'Seleccione un Rol'),
+        //id_rol: Yup.string().required('El campo es obligatorio'),
     }
 )
 
@@ -99,14 +104,15 @@ export default function Page() {
         genero:'',
         fecha_nacimiento:'',
         estado_civil:'',
-        profesion:'',
+        id_profesion:'',
+        salario_base:'',
         posicion:'',
         fecha_contratacion:'',
         departamento:'',
         correo:'',
         contrasenia:'',
         confirmar_contrasenia:'',
-        id_rol:ROLES.USER,
+        id_rol:2,//ROLES.USER,
 
     }
 
@@ -127,6 +133,7 @@ export default function Page() {
                         /*onSubmit Event */
                         onSubmit = {async (values,actions) =>
                             {
+                                //alert(JSON.stringify(values));
                                 await new Promise((r) =>{
                                         return setTimeout(r, 2000)
                                     }
@@ -173,7 +180,7 @@ export default function Page() {
                     >
                         {({errors, touched, isSubmitting, handleSubmit, isValid, dirty}) =>
                         (
-                            <Form className={'flex flex-col '} onSubmit={handleSubmit}>
+                            <Form className={'flex flex-col text-black dark:text-white'} onSubmit={handleSubmit}>
                                 <div className='flex gap-2'>
                                     <div className='flex flex-col w-3/5'>
                                         <label htmlFor='cui' className="block text-gray-500 cursor-text text-base font-semibold mb-2">CUI</label>
@@ -183,7 +190,7 @@ export default function Page() {
                                             name='cui'
                                             placeholder='CUI'
                                             type='text'
-                                            className="rounded border-2 border-gray-200 text-sm leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"></Field>
+                                            className="rounded border-2 border-gray-200 text-sm leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"></Field>
                                         {errors.cui && touched.cui && (
                                             <div className='text-red-700 text-sm'>
                                                 <ErrorMessage name='cui'></ErrorMessage>
@@ -199,7 +206,7 @@ export default function Page() {
                                             name="nit"
                                             placeholder="NIT"
                                             type='text'
-                                            className="rounded border-2 border-gray-200 text-sm  leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                            className="rounded border-2 border-gray-200 text-sm  leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                         />
                                         {errors.nit && touched.nit && (
                                             <div className='text-red-700 text-sm'>
@@ -219,7 +226,7 @@ export default function Page() {
                                             name='nombre'
                                             placeholder='Nombre'
                                             type='text'
-                                            className="rounded border-2 border-gray-200  text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                            className="rounded border-2 border-gray-200  text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                         ></Field>
                                         {errors.nombre && touched.nombre&& (
                                             <div className='text-red-700 text-sm'>
@@ -236,7 +243,7 @@ export default function Page() {
                                             name="apellido"
                                             placeholder="Apellido"
                                             type='text'
-                                            className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                            className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                         />
                                         {errors.apellido && touched.apellido && (
                                             <div className='text-red-700 text-sm'>
@@ -248,14 +255,14 @@ export default function Page() {
 
                                 <label htmlFor="phone" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Numero de telefono</label>
                                 <div className='flex gap-1 items-center'>
-                                    <span className='text-black dark:text-white'>+502</span>
+                                    <span className=' dark:text-white'>+502</span>
                                     <Field
                                         autoComplete="phone"
                                         id="phone"
                                         name="telefono"
                                         placeholder="xxxx-xxxx"
                                         type='text'
-                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
                                     {errors.telefono && touched.telefono && (
                                         <div className='text-red-700 text-sm'>
@@ -270,7 +277,7 @@ export default function Page() {
                                     id="address"
                                     name="direccion"
                                     type='text'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.direccion && touched.direccion && (
                                     <div className='text-red-700 text-sm'>
@@ -315,7 +322,7 @@ export default function Page() {
                                     id="birthday"
                                     name="fecha_nacimiento"
                                     type='date'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.fecha_nacimiento && touched.fecha_nacimiento && (
                                     <div className='text-red-700 text-sm'>
@@ -369,14 +376,27 @@ export default function Page() {
 
 
                                 <label htmlFor="profession" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Profesion</label>
-                                <Field
-                                    autoComplete="profession"
-                                    id="profession" name="profesion"
-                                    type='text'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
-                                {errors.profesion && touched.profesion && (
+                                <Field id='profession' name='id_profesion' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'>
+                                    <option value="" disabled selected>Seleccione Profesion</option>
+                                    <option value={1}>Administracion</option>
+                                    <option value={2}>Contador</option>
+                                    <option value={3}>HHRR</option>
+                                </Field>
+                                {errors.id_profesion && touched.id_profesion && (
                                     <div className='text-red-700 text-sm'>
-                                        <ErrorMessage name='profesion'></ErrorMessage>
+                                        <ErrorMessage name='id_profesion'></ErrorMessage>
+                                    </div>
+                                )}
+                                <label htmlFor="base_salary" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Salario base</label>
+                                <Field
+                                    autoComplete="base_salary"
+                                    id="base_salary"
+                                    name="salario_base"
+                                    type='number'
+                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
+                                {errors.salario_base && touched.salario_base && (
+                                    <div className='text-red-700 text-sm'>
+                                        <ErrorMessage name='salario_base'></ErrorMessage>
                                     </div>
                                 )}
                                 <label htmlFor="position" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Posicion</label>
@@ -385,7 +405,7 @@ export default function Page() {
                                     id="position"
                                     name="posicion"
                                     type='text'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
+                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
                                 {errors.posicion && touched.posicion && (
                                     <div className='text-red-700 text-sm'>
                                         <ErrorMessage name='posicion'></ErrorMessage>
@@ -397,7 +417,7 @@ export default function Page() {
                                     id="hiring_date"
                                     name="fecha_contratacion"
                                     type='date'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.fecha_contratacion && touched.fecha_contratacion && (
                                     <div className='text-red-700 text-sm'>
@@ -410,7 +430,7 @@ export default function Page() {
                                     id="department"
                                     name="departamento"
                                     type='text'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
+                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
                                 {errors.departamento && touched.departamento && (
                                     <div className='text-red-700 text-sm'>
                                         <ErrorMessage name='departamento'></ErrorMessage>
@@ -424,7 +444,7 @@ export default function Page() {
                                     name="correo"
                                     placeholder="example@email.com"
                                     type='email'
-                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                    className="rounded border-2 border-gray-200 text-sm w-full leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                 />
                                 {errors.correo && touched.correo && (
                                     <div className='text-red-700 text-sm'>
@@ -439,7 +459,7 @@ export default function Page() {
                                         id="password"
                                         name="contrasenia"
                                         type={showPassword ? "text" : "password"}
-                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
                                     <span onClick={()=>setShowPassword(!showPassword)}  className='rounded border-2  bg-gray-200 w-8  flex items-center justify-center cursor-pointer'>{showPassword ? <EyeIcon className='text-black'></EyeIcon> : <EyeSlashIcon className='text-black'></EyeSlashIcon>}</span>
                                 </div>
@@ -456,7 +476,7 @@ export default function Page() {
                                         id="confirmPassword"
                                         name="confirmar_contrasenia"
                                         type={showConfirmPassword ? "text" : "password"}
-                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4 text-black tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
                                     <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}  className='rounded border-2  bg-gray-200 w-8  flex items-center justify-center cursor-pointer'>{showConfirmPassword ? <EyeIcon className='text-black'></EyeIcon> : <EyeSlashIcon className='text-black'></EyeSlashIcon>}</span>
 
@@ -468,9 +488,9 @@ export default function Page() {
                                 )}
 
                                 <label htmlFor='rol'className='block text-gray-500 cursor-text text-base font-semibold mb-2'>Rol</label>
-                                    <Field id='rol' name='id_rol' component='select' preventDefault={ROLES.USER} className='rounded border-2 border-gray-200 text-black focus:border-green-400 focus:ring-green-400  outline-0'>
-                                        <option value='user'>User</option>
-                                        <option value='admin'>Admin</option>
+                                    <Field id='rol' name='id_rol' component='select' preventDefault={ROLES.USER} className='rounded border-2 border-gray-200 focus:border-green-400 focus:ring-green-400  outline-0'>
+                                        <option value={2}>Usuario</option>
+                                        <option value={1}>Admin</option>
                                     </Field>
                                     {errors.id_rol && touched.id_rol && (
                                         <div className='text-red-700 text-sm'>
@@ -482,7 +502,7 @@ export default function Page() {
                                     <Link href="/auth/login" className="text-sm text-green-400"><p>¿Ya tiene una cuenta? Iniciar sesion</p></Link>
                                     <button  type="submit" className={`${!isValid || !dirty ? '':'hover:bg-green-300'} bg-green-400  transition-colors duration-300 w-max m-auto px-6 py-2 rounded text-white text-sm font-normal`}>Register</button>
                                 </div>
-                                {isSubmitting ? (<p className={'text-black dark:text-white'}>Registering...</p>) : null}
+                                {isSubmitting ? (<p >Registering...</p>) : null}
                             </Form>
                         )}
 

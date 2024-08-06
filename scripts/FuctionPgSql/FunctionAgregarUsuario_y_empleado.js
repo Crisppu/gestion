@@ -1,22 +1,23 @@
 export async function FunctionAgregarUsuario_y_empleado (client) {
     try {
         await client.sql`CREATE OR REPLACE FUNCTION agregar_usuario_y_empleado(
-        cui VARCHAR,
-        nit VARCHAR,
-        nombre VARCHAR,
-        apellido VARCHAR,
-        telefono VARCHAR,
-        direccion VARCHAR,
+        cui VARCHAR(50),
+        nit VARCHAR(30),
+        nombre VARCHAR(30),
+        apellido VARCHAR(30),
+        telefono VARCHAR(20),
+        direccion VARCHAR(50),
         genero INT,
         fecha_nacimiento DATE,
         estado_civil INT,
-        profesion VARCHAR,
-        posicion VARCHAR,
+        id_profesion INTEGER,
+        salario_base DECIMAL(10, 2),
+        posicion VARCHAR(50),
         fecha_contratacion DATE,
-        departamento VARCHAR,
-        correo VARCHAR,
-        contrasenia VARCHAR,
-        id_rol UUID
+        departamento VARCHAR(60),
+        correo VARCHAR(30),
+        contrasenia VARCHAR(80),
+        id_rol integer
         )
         RETURNS VOID
         LANGUAGE plpgsql
@@ -30,8 +31,8 @@ export async function FunctionAgregarUsuario_y_empleado (client) {
         RETURNING id INTO id_usuario;
 
         -- Agregar empleado con el ID del usuario obtenido
-        INSERT INTO Empleados (cui, nit, nombre, apellido, telefono, direccion, genero, fecha_nacimiento, estado_civil, profesion, posicion, fecha_contratacion, departamento, id_rol, id_usuario)
-        VALUES (cui, nit, nombre, apellido, telefono, direccion, genero, fecha_nacimiento, estado_civil, profesion, posicion, fecha_contratacion, departamento, id_rol, id_usuario);
+        INSERT INTO Empleados (cui, nit, nombre, apellido, telefono, direccion, genero, fecha_nacimiento, estado_civil, id_profesion, salario_base, posicion, fecha_contratacion, departamento, id_rol, id_usuario)
+        VALUES (cui, nit, nombre, apellido, telefono, direccion, genero, fecha_nacimiento, estado_civil, id_profesion, salario_base, posicion, fecha_contratacion, departamento, id_rol, id_usuario);
 
         EXCEPTION
         WHEN OTHERS THEN
@@ -46,6 +47,6 @@ export async function FunctionAgregarUsuario_y_empleado (client) {
     }catch (error) {
         console.error('Error al crear agregar_usuario_y_empleado:', error);
         throw new Error('Failed to fetch agregar_usuario_y_empleado:');
-    }       
+    }
 
 }

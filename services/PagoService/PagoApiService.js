@@ -1,4 +1,3 @@
-'use server'
 //Ruta API (API Route)
 import axios from 'axios';
 //mostrar todos los pagos

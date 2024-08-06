@@ -9,6 +9,7 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { Button } from '@nextui-org/react';
 import {XMarkIcon} from '@heroicons/react/24/outline'; //estos son iconos atraidos desde Tailwind
+import { CalculoHorasExtrasEnDia, CalculoMensualISR, Deducciones } from './calculoPago/calculosImpuestos';
 
 
 const loginSchema = Yup.object().shape(
@@ -25,6 +26,10 @@ const loginSchema = Yup.object().shape(
         horasextras: Yup.number()
         .required('campo es obligatorio')
         .positive('Las horas extras deben ser positivas'),
+
+        jornada: Yup.string()
+        .oneOf(['diurna', 'nocturna','mixto','feriado','no'], 'Seleccione una Jornada')
+        .required('Campo es obligatorio'),
 
 
         totalhorasextras: Yup.number()
@@ -48,13 +53,16 @@ const loginSchema = Yup.object().shape(
 export default function FormikPayments({ toggleForm }) {
     const [error, setError] = useState(null);
     const [showTooltip, setShowTooltip] = useState(false);
-
+    const [descuento, setDescuento] = useState();
+    const [totalhorasExtras, setTotalhorasExtras] = useState();
+    const [isr, setISR] = useState();
     //const modeSelector = useSelector(selectDarkMode);
     const route = useRouter();
     const initialCredentials = {
         fechapago:'',
         salariobase:'',
         horasextras:'',
+        jornada:'',
         totalhorasextras:'',
         descuentos:'',
         salarioneto:'',
@@ -89,7 +97,14 @@ export default function FormikPayments({ toggleForm }) {
                         /*onSubmit Event */
                         onSubmit = {async (values,actions) =>
                             {
-                                alert(JSON.stringify(values))
+                                // alert(JSON.stringify(values))
+                                const r2 = Deducciones(values.salariobase);
+
+                                // const r1 = CalculoMensualISR(values.salariobase);
+                                // const r2 = Deducciones(values.salariobase, r1);
+                            
+                                alert(JSON.stringify(r2))
+
                                 // const response = await signIn('credentials',{
                                 //     email:values.email,
                                 //     password:values.password,
@@ -106,7 +121,7 @@ export default function FormikPayments({ toggleForm }) {
                             }
                         }
                     >
-                        {({ errors, touched, isSubmitting, handleSubmit, isValid, dirty}) =>
+                        {({ errors, touched, isSubmitting, handleSubmit, isValid, dirty, values}) =>
                             (
                                 <Form className={'flex flex-col dark:text-white text-black h-[500px] overflow-y-auto'} onSubmit={handleSubmit}>
                                     <laber htmlFor="fechapago" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Fecha de pago</laber>
@@ -116,7 +131,7 @@ export default function FormikPayments({ toggleForm }) {
                                         name="fechapago"
                                         placeholder="fechapago"
                                         type='date'
-                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-10 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
                                     {errors.fechapago && touched.fechapago && (
                                         <div className='text-red-700 text-sm'>
@@ -125,12 +140,13 @@ export default function FormikPayments({ toggleForm }) {
                                     )}
                                     <laber htmlFor="salariobase" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Salario base</laber>
                                     <Field
+                                        //onBlur={setDescuento(()=>Deducciones(values.salariobase))}
                                         autoComplete="salariobase"
                                         id="salariobase"
                                         name="salariobase"
                                         placeholder="salariobase"
                                         type='number'
-                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-10 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
                                     {errors.salariobase && touched.salariobase && (
                                         <div className='text-red-700 text-sm'>
@@ -138,61 +154,86 @@ export default function FormikPayments({ toggleForm }) {
                                         </div>
                                     )}
                                     <laber htmlFor="horasextras" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Horas extras</laber>
-                                    <Field
-                                        autoComplete="horasextras"
-                                        id="horasextras"
-                                        name="horasextras"
-                                        placeholder="horasextras"
-                                        type='number'
-                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                    />
-                                    {errors.horasextras && touched.horasextras && (
-                                        <div className='text-red-700 text-sm'>
-                                            <ErrorMessage name='horasextras'></ErrorMessage>
+                                    <div className='flex  gap-2'>
+                                        <div className='flex-1'>
+                                            <Field
+                                               // onBlur={setTotalhorasExtras(()=>CalculoHorasExtrasEnDia((values.salariobase - descuento),(values.jornada)))}
+                                                autoComplete="horasextras"
+                                                id="horasextras"
+                                                name="horasextras"
+                                                placeholder="0"
+                                                type='number'
+                                                className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-10 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                            />
+                                            {errors.horasextras && touched.horasextras && (
+                                                <div className='text-red-700 text-sm'>
+                                                    <ErrorMessage name='horasextras'></ErrorMessage>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
+                                        <div className='flex-1'>
+                                            <Field id='jornada' name='jornada' component='select' placeholder="Seleccione Jornada"  className='rounded border-2 h-10 border-gray-200 text-black dark:text-white focus:border-green-400 focus:ring-green-400  outline-0'>
+                                            <option value="" disabled selected>Seleccione Jornada</option>
+                                                <option value='diurna'>Diurna</option>
+                                                <option value='nocturna'>Nocturna</option>
+                                                <option value='mixto'>Mixto</option>
+                                                <option value='feriado'>Dia Feriado</option>
+                                                <option value='no'>n/o</option>
+                                            </Field>
+                                            {errors.jornada && touched.jornada && (
+                                                <div className='text-red-700 text-sm'>
+                                                    <ErrorMessage name='jornada'></ErrorMessage>
+                                                </div>
+                                            )}
+                                        </div>
+                                        
+                                    </div>
                                     <laber htmlFor="totalhorasextras" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Total horas extras</laber>
                                     <Field
+                                        //value={totalhorasExtras ? totalhorasExtras * values.horasextras : 0}
                                         autoComplete="totalhorasextras"
                                         id="totalhorasextras"
                                         name="totalhorasextras"
-                                        placeholder="totalhorasextras"
+                                        placeholder="0"
                                         type='number'
-                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-10 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
-                                    {errors.totalhorasextras && touched.totalhorasextras && (
+                                    {/* {errors.totalhorasextras && touched.totalhorasextras && (
                                         <div className='text-red-700 text-sm'>
                                             <ErrorMessage name='totalhorasextras'></ErrorMessage>
                                         </div>
-                                    )}
-                                    <laber htmlFor="descuentos" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Descuentos</laber>
+                                    )} */}
+                                    
+                                    <laber htmlFor="descuentos" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Descuentos (IGSS,INTECAP,IRTRA)</laber>
                                     <Field
+                                       // value={descuento?descuento:0}
                                         autoComplete="descuentos"
                                         id="descuentos"
                                         name="descuentos"
-                                        placeholder="descuentos"
+                                        //placeholder="descuentos"
                                         type='number'
-                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-10 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
-                                    {errors.descuentos && touched.descuentos && (
+                                    {/* {errors.descuentos && touched.descuentos && (
                                         <div className='text-red-700 text-sm'>
                                             <ErrorMessage name='descuentos'></ErrorMessage>
                                         </div>
-                                    )}
+                                    )} */}
                                     <laber htmlFor="salarioneto" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Salario neto</laber>
                                     <Field
+                                        //value ={descuento ? CalculoMensualISR(values.salariobase,descuento) : 0}
                                         autoComplete="salarioneto"
                                         id="salarioneto"
                                         name="salarioneto"
-                                        placeholder="salarioneto"
+                                        placeholder="0"
                                         type='number'
-                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        className="rounded border-2 border-gray-200 w-full leading-4  tracking-normal appearance-none block h-10 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
                                     />
-                                    {errors.salarioneto && touched.salarioneto && (
+                                    {/* {errors.salarioneto && touched.salarioneto && (
                                         <div className='text-red-700 text-sm'>
                                             <ErrorMessage name='salarioneto'></ErrorMessage>
                                         </div>
-                                    )}
+                                    )} */}
                                     <div className='flex flex-col pt-2 gap-2'>
                                         <Button isDisabled={!isValid || !dirty} type="submit" color="primary">Guardar</Button>
                                     </div>
