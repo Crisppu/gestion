@@ -32,6 +32,6 @@ export default async function createUserAndEmployeeController(req, res) {
         res.status(200).json({ message: 'Empleado creado exitosamente' ,data: response});
     } catch (error) {
         //console.error("Error al crear el empleado:", error);
-        res.status(500).json({ message: 'Error al crear el empleado transaccion' });
+        res.status(500).json({ message: 'Error al crear el empleado transaccion', error: error });
     }
 }

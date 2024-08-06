@@ -10,8 +10,8 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import * as Yup from 'yup';
-import { PROFESIONES } from '@/modelsOrientacionObjeto/profesiones.num';
 import { fetchCreateNewEmployeeTransaction } from '@/services/transaccionService/transiccionUsuarioAndEmpleadoApiService';
+import { getSessionNextAuth } from "@/app/api/auth/[...nextauth]/getSessionAsync";
 
 const registerSchema = Yup.object().shape(
   //shape: nos va permitir especificar la estructura de ese objeto
@@ -123,7 +123,7 @@ export default function Page() {
                 <div className='flex justify-center'><Link href={'/'}><img src='/logoSantaAna.png' alt='logo Santa Ana' width={60} height={60}></img></Link></div>
 
                     <div className="text-2xl font-bold mb-2 text-[#1e0e4b] dark:text-white text-center">Registro</div>
-                    {message && <p className='text-red-600'>{message}</p>}
+                    {message && <p className='text-white bg-red-500'>{message}</p>}
 
                     <Formik
                         /* Initial values that the form will take */
@@ -133,6 +133,7 @@ export default function Page() {
                         /*onSubmit Event */
                         onSubmit = {async (values,actions) =>
                             {
+                                const session = await getSessionNextAuth();
                                 //alert(JSON.stringify(values));
                                 await new Promise((r) =>{
                                         return setTimeout(r, 2000)
@@ -147,31 +148,19 @@ export default function Page() {
 
                                     const responseTransaction = await fetchCreateNewEmployeeTransaction(newList);
                                     actions.resetForm();
-                                    alert(JSON.stringify(responseTransaction.message));
-                                    await new Promise((r) =>{
-                                            return setTimeout(r, 2000)
-                                        }
-                                    );
-                                    router.push('/auth/login');
+                                    if(responseTransaction.data){
+                                        alert(JSON.stringify(responseTransaction.message));
+                                    }else{
+                                        setMessage(responseTransaction.message);
+                                    }
+
+                                    if(!session?.user){
+                                        router.push('/auth/login');
+                                    }
 
                                 }catch(error){
-                                    //console.error(error);
-                                    //throw new Error(error)
                                     setMessage(error.response ? error.response.data.message : error.menssage)
                                 }
-
-
-
-
-                                /*const response = await findUniqueEmail(values.email);
-                                if(response.rows.length > 0){
-                                    alert('este correo ya esta registrado')
-                                }else{
-                                    await createUserBD(values);
-                                    actions.resetForm(); //para limpiar el formulario
-                                    router.push('/auth/login');
-
-                                }*/
 
                                 actions.setSubmitting(false);
                                 // navigateHistory('/profile');
