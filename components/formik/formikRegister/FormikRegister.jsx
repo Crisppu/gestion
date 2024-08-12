@@ -41,13 +41,17 @@ const registerSchema = Yup.object().shape(
         .matches(/^\d{8}$/, 'Formato incorrecto')
         .required('El campo es obligatorio'),
 
+        pais: Yup.string()
+        .required('El campo es obligatorio'),
+        departamento_pais: Yup.string()
+        .required('El campo es obligatorio'),
+        id_municipio: Yup.string()
+        .required('El campo es obligatorio'),
+
         direccion: Yup.string()
         .matches(/^[A-Za-z0-9\s]+$/, 'No se permiten caracteres especiales (@,/,*,%,&)')
         .min(5,'Dirección muy corta')
         .max(20,'Dirección muy larga')
-        .required('El campo es obligatorio'),
-
-        id_municipio: Yup.string()
         .required('El campo es obligatorio'),
 
         genero: Yup.string()
@@ -97,21 +101,18 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
     const [message, setMessage] = useState('');
     const [getPais, setPais] = useState('');
     const [getDepartamento, setDepartamento] = useState('');
-    console.log(getPais);
-
-    console.log(dataCountries);
-    console.log(dataDepartaments);
+    // console.log(getMunicipios);
+    // console.log(getPais);
     const initialRegister = {
         cui:'',
         nit:'',
         nombre:'',
         apellido:'',
         telefono:'',
-        direccion:'',
-
         pais:'',
-        departamento:'',
+        departamento_pais:'',
         id_municipio:'',
+        direccion:'',
 
         genero:'',
         fecha_nacimiento:'',
@@ -127,6 +128,26 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
         id_rol:2,//ROLES.USER,
 
     }
+  
+    function clear(value) {
+        setPais(value);
+        setMunicipio([]);
+    }
+    function mostrarM(value){
+        console.log(value)
+        setDepartamento(value);
+    }
+    function mostrarListaMunicipios() {
+        let lista2 = dataMunicipios.filter(mun => mun.id_pais === Number(getDepartamento));
+        setMunicipio(lista2);
+    }
+    const [selectedCountry, setSelectedCountry] = useState('');
+    const [selectedDepartment, setSelectedDepartment] = useState('');
+    const [getMunicipios, setMunicipio] = useState([]);
+    console.log(getMunicipios);
+    console.log(selectedDepartment);
+    console.log(selectedCountry);
+
 
     return (
         <div className={`flex justify-center items-center min-h-screen ${modeSelector} dark:bg-black`}>
@@ -145,41 +166,40 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                         /*onSubmit Event */
                         onSubmit = {async (values,actions) =>
                             {
-                                const session = await getSessionNextAuth();
-                                //alert(JSON.stringify(values));
-                                await new Promise((r) =>{
-                                        return setTimeout(r, 2000)
-                                    }
-                                );
-                                try{
-                                    const response = await fetchUserByEmail(values.correo);
-                                    if(response.data) {
-                                        alert(JSON.stringify(response.message))
-                                    }
-                                    const{confirmar_contrasenia, ...newList}=values;
+                                 alert(JSON.stringify(values));
+                                // const session = await getSessionNextAuth();
+                                // await new Promise((r) =>{
+                                //         return setTimeout(r, 2000)
+                                //     }
+                                // );
+                                // try{
+                                //     const response = await fetchUserByEmail(values.correo);
+                                //     if(response.data) {
+                                //         alert(JSON.stringify(response.message))
+                                //     }
+                                //     const{confirmar_contrasenia, ...newList}=values;
 
-                                    const responseTransaction = await fetchCreateNewEmployeeTransaction(newList);
-                                    actions.resetForm();
-                                    if(responseTransaction.data){
-                                        alert(JSON.stringify(responseTransaction.message));
-                                    }else{
-                                        setMessage(responseTransaction.message);
-                                    }
+                                //     const responseTransaction = await fetchCreateNewEmployeeTransaction(newList);
+                                //     actions.resetForm();
+                                //     if(responseTransaction.data){
+                                //         alert(JSON.stringify(responseTransaction.message));
+                                //     }else{
+                                //         setMessage(responseTransaction.message);
+                                //     }
 
-                                    if(!session?.user){
-                                        router.push('/auth/login');
-                                    }
+                                //     if(!session?.user){
+                                //         router.push('/auth/login');
+                                //     }
 
-                                }catch(error){
-                                    setMessage(error.response ? error.response.data.message : error.menssage)
-                                }
+                                // }catch(error){
+                                //     setMessage(error.response ? error.response.data.message : error.menssage)
+                                // }
 
-                                actions.setSubmitting(false);
-                                // navigateHistory('/profile');
+                                // actions.setSubmitting(false);
                             }
                         }
                     >
-                        {({errors, touched, isSubmitting, handleSubmit, isValid, dirty, values})  =>
+                        {({errors, touched, isSubmitting, handleSubmit, isValid, dirty, values, setFieldValue})  =>
                             (
                                 <Form className={'flex flex-col gap-y-2 text-black dark:text-white'} onSubmit={handleSubmit}>
                                     <div className='flex gap-2'>
@@ -255,8 +275,8 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                                     </div>
 
                                     <label htmlFor="phone" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Numero de telefono</label>
-                                    <div className='flex gap-2 items-center'>
-                                        <span className=' dark:text-white'>+502</span>
+                                    <div className='flex gap-2 items-center '>
+                                        <span className=' text-black bg-gray-200 h-11 flex items-center justify-center p-1 rounded border-2'>+502</span>
                                         <Field
                                             autoComplete="phone"
                                             id="phone"
@@ -274,11 +294,22 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                                     <div className='flex gap-2'>
                                         <div className='flex-1'>
                                         <label htmlFor="country" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Pais</label>
-                                        <Field id='country' name='pais' component='select' className=' rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'>
+                                        <Field  id='country' name='pais' component='select' className=' rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'
+                                        value={selectedCountry}
+                                        onChange={(event) => {
+                                            const selectedValue = event.target.value;
+                                            setSelectedCountry(selectedValue);
+                                            setFieldValue('pais', selectedValue);
+                                            setSelectedDepartment(''); // Resetea el departamento al cambiar el país
+                                            setFieldValue('departamento', '');
+                                            setFieldValue('municipio', ''); // Resetea el municipio al cambiar el país
+                                        }}
+                                        >
                                             <option value="" disabled selected>Seleccione Pais</option>
                                             {dataCountries.map(({nombre, id}) => (
-                                                <option key={id} value={id} onClick={setPais(values.pais)}>{nombre}</option>
-                                            ))}
+                                                    <option key={id} value={id} >{nombre}</option>
+                                                ))
+                                            }
                                         </Field>
                                         {errors.pais && touched.pais && (
                                             <div className='text-red-700 text-sm'>
@@ -286,30 +317,41 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                                             </div>
                                         )}
                                         </div>
-                                        <div className='flex-1'>
+                                        <div className='flex-3'>
                                             <label htmlFor="department" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Departamento</label>
-                                            <Field id='department' name='departamento' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'>
+                                            <Field  id='department' name='departamento_pais' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'
+                                            value={selectedDepartment}
+                                            onChange={(event) => {
+                                                const selectedValue = event.target.value;
+                                                setSelectedDepartment(selectedValue);
+                                                setFieldValue('departamento_pais', selectedValue);
+                                                setFieldValue('municipio', ''); // Resetea el municipio al cambiar el departamento
+                                            }}>
                                                 <option value="" disabled selected>Seleccione Departamento</option>
                                                 {
-                                                    getPais ? dataDepartaments.filter(dep => dep.id_pais === Number(getPais)).map(({id, nombre}) => (
-                                                        <option key={id} value={id} onClick={setDepartamento(values.departamento)}>{nombre}</option>
+                                                    selectedCountry ? dataDepartaments.filter(dep => dep.id_pais === Number(selectedCountry)).map(({id, nombre}) => (
+                                                        <option key={id} value={id}>{nombre}</option>
                                                     )) : null
                                                 }
                                             </Field>
-                                            {errors.departamento && touched.departamento && (
+                                            {errors.departamento_pais && touched.departamento_pais && (
                                                 <div className='text-red-700 text-sm'>
-                                                    <ErrorMessage name='departamento'></ErrorMessage>
+                                                    <ErrorMessage name='departamento_pais'></ErrorMessage>
                                                 </div>
                                             )}
                                         </div>
-                                        <div className='flex-1'>
+                                        <div className='flex-3'>
                                             <label htmlFor="municipio" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Municipio</label>
-                                            <Field id='municipio' name='id_municipio' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'>
+                                            <Field id='municipio' name='id_municipio' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'
+                                            onChange={(event) => {
+                                                setFieldValue('id_municipio', event.target.value);
+                                            }}
+                                            >
                                                 <option value="" disabled selected>Seleccione municipio</option>
                                                 {
-                                                    getDepartamento ? dataMunicipios.filter(mun => mun.id_departamento === Number(getDepartamento)).map(({id, nombre}) => (
+                                                    dataMunicipios.filter(mun => mun.id_departamento === Number(selectedDepartment)).map(({id, nombre}) => (
                                                         <option key={id} value={id} >{nombre}</option>
-                                                    )) : null
+                                                    ))
                                                 }
                                             </Field>
                                             {errors.id_municipio && touched.id_municipio && (

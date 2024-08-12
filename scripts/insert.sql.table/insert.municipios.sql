@@ -312,3 +312,21 @@ insert into municipios (nombre, id_departamento) values
 ('Teculutan', 24),
 ('Usumatlan', 24),
 ('Zacapa', 24);
+
+insert into municipios (nombre, id_departamento) values
+('Durango',25),
+('Gomez Palacio',25),
+('Lerdo',25),
+('Canatlan',25),
+('Mapimi',25),
+('Guadalupe Victoria',25),
+('Santiago Papasquiaro',25),
+('Cuencame',25),
+('Poanas',25),
+('El Oro',25),
+('Panuco de Coronado',25),
+('Vicente Guerrero',25),
+('Mezquital',25),
+('Pueblo Nuevo',25),
+('San Dimas',25);
+
