@@ -1,5 +1,6 @@
 export const columnsPagos = [
-    {name: "Id_Pago",uid: "id",},
+    {name: "Id",uid: "id",},
+    {name:"Empleado",uid:"id_empleado",},
     {name: "Fecha_Pago",uid: "fechapago",sortable: true,},
     {name:"Salario_Base",uid:"salariobase",sortable: true,},
     {name:"Horas_Extras",uid:"horasextras",},

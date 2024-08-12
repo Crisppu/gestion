@@ -140,7 +140,7 @@ export default function FormikPayments({ toggleForm }) {
                                     )}
                                     <laber htmlFor="salariobase" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Salario base</laber>
                                     <Field
-                                        //onBlur={setDescuento(()=>Deducciones(values.salariobase))}
+                                        onBlur={setDescuento(()=>Deducciones(values.salariobase))}
                                         autoComplete="salariobase"
                                         id="salariobase"
                                         name="salariobase"
@@ -157,7 +157,7 @@ export default function FormikPayments({ toggleForm }) {
                                     <div className='flex  gap-2'>
                                         <div className='flex-1'>
                                             <Field
-                                               // onBlur={setTotalhorasExtras(()=>CalculoHorasExtrasEnDia((values.salariobase - descuento),(values.jornada)))}
+                                               onBlur={setTotalhorasExtras(()=>CalculoHorasExtrasEnDia((values.salariobase - descuento),(values.jornada)))}
                                                 autoComplete="horasextras"
                                                 id="horasextras"
                                                 name="horasextras"
@@ -190,7 +190,7 @@ export default function FormikPayments({ toggleForm }) {
                                     </div>
                                     <laber htmlFor="totalhorasextras" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Total horas extras</laber>
                                     <Field
-                                        //value={totalhorasExtras ? totalhorasExtras * values.horasextras : 0}
+                                        value={totalhorasExtras ? totalhorasExtras * values.horasextras : 0}
                                         autoComplete="totalhorasextras"
                                         id="totalhorasextras"
                                         name="totalhorasextras"
@@ -206,7 +206,7 @@ export default function FormikPayments({ toggleForm }) {
                                     
                                     <laber htmlFor="descuentos" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Descuentos (IGSS,INTECAP,IRTRA)</laber>
                                     <Field
-                                       // value={descuento?descuento:0}
+                                       value={descuento?descuento:0}
                                         autoComplete="descuentos"
                                         id="descuentos"
                                         name="descuentos"
@@ -221,7 +221,7 @@ export default function FormikPayments({ toggleForm }) {
                                     )} */}
                                     <laber htmlFor="salarioneto" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Salario neto</laber>
                                     <Field
-                                        //value ={descuento ? CalculoMensualISR(values.salariobase,descuento) : 0}
+                                        value ={descuento ? CalculoMensualISR(values.salariobase,descuento) : 0}
                                         autoComplete="salarioneto"
                                         id="salarioneto"
                                         name="salarioneto"

@@ -36,7 +36,7 @@ import FormikPayments from "../formik/formikPagos/FormikPayments";
 // };
 
 //const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
-const INITIAL_VISIBLE_COLUMNS_PAGOS = ["id","fechapago","salariobase","horasextras","totalhorasextras","descuentos","id_usuario","acciones"];
+const INITIAL_VISIBLE_COLUMNS_PAGOS = ["id_empleado","fechapago","salariobase","horasextras","totalhorasextras","descuentos","salarioneto","acciones"];
 
 export function TablaPagos({dataPagos}) {
     const [filterValue, setFilterValue] = useState("");
@@ -141,6 +141,12 @@ export function TablaPagos({dataPagos}) {
                             <p className="text-bold text-small capitalize">{cellValue}</p>
                         </div>
                     );
+                case"id_empleado":
+                return (
+                    <div className="text-justify">
+                        <p className="text-bold text-small capitalize">{cellValue}</p>
+                    </div>
+                );
                 case "fechapago":
                     const dateFechaPago = new Date(cellValue);
                     const formattedDateFechaPago = dateFechaPago.toISOString().split('T')[0];
