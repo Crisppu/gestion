@@ -2,6 +2,7 @@
 import { createUserAndEmployee } from '@/models/TransaccionUsuarioAndEmpleado';
 
 export default async function createUserAndEmployeeController(req, res) {
+    console.log(req.body);
     const {
         cui,
         nit,
@@ -9,6 +10,7 @@ export default async function createUserAndEmployeeController(req, res) {
         apellido,
         telefono,
         direccion,
+        id_municipio,
         genero,
         fecha_nacimiento,
         estado_civil,
@@ -16,17 +18,17 @@ export default async function createUserAndEmployeeController(req, res) {
         salario_base,
         posicion,
         fecha_contratacion,
-        departamento,
         correo,
         contrasenia,
         id_rol,
+        createBy
     } = req.body;
 
     try {
         const response = await createUserAndEmployee({cui,nit,nombre
-            ,apellido,telefono,direccion,
+            ,apellido,telefono,direccion,id_municipio,
             genero,fecha_nacimiento,estado_civil,
-            id_profesion,salario_base,posicion,fecha_contratacion,departamento,correo,contrasenia,id_rol
+            id_profesion,salario_base,posicion,fecha_contratacion,correo,contrasenia,id_rol,createBy
         });
 
         res.status(200).json({ message: 'Empleado creado exitosamente' ,data: response});

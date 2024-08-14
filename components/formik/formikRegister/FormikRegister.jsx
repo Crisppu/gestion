@@ -26,32 +26,32 @@ const registerSchema = Yup.object().shape(
         .required('El campo es obligatorio'),
 
         nombre: Yup.string()
-        .matches(/^[A-Za-z]+$/, 'El nombre solo puede contener letras')
+        .matches(/^[A-Za-z\s]+$/, 'El nombre solo puede contener letras')
         .min(2,'nombre muy corto')
         .max(30,'nombre muy largo')
         .required('El campo es obligatorio'),
 
         apellido: Yup.string()
-        .matches(/^[A-Za-z]+$/, 'El apellido solo puede contener letras')
+        .matches(/^[A-Za-z\s]+$/, 'El apellido solo puede contener letras')
         .min(2,'apellido muy corto')
         .max(30,'apellido muy largo')
         .required('El campo es obligatorio'),
 
-        telefono: Yup.string()
-        .matches(/^\d{8}$/, 'Formato incorrecto')
-        .required('El campo es obligatorio'),
 
-        pais: Yup.string()
-        .required('El campo es obligatorio'),
-        departamento_pais: Yup.string()
-        .required('El campo es obligatorio'),
-        id_municipio: Yup.string()
-        .required('El campo es obligatorio'),
+        // pais: Yup.string()
+        // .required('El campo es obligatorio'),
+        // departamento_pais: Yup.string()
+        // .required('El campo es obligatorio'),
+        // id_municipio: Yup.number()
+        // .required('El campo es obligatorio'),
 
         direccion: Yup.string()
         .matches(/^[A-Za-z0-9\s]+$/, 'No se permiten caracteres especiales (@,/,*,%,&)')
         .min(5,'Dirección muy corta')
         .max(20,'Dirección muy larga')
+        .required('El campo es obligatorio'),
+        telefono: Yup.string()
+        .matches(/^\d{8}$/, 'Formato incorrecto')
         .required('El campo es obligatorio'),
 
         genero: Yup.string()
@@ -62,7 +62,9 @@ const registerSchema = Yup.object().shape(
         estado_civil: Yup.string()
         .oneOf(['0', '1', '2', '3'], 'Seleccione su estado civil')
         .required('El campo es obligatorio'),
-        id_profesion: Yup.string()
+        departamento_empresa: Yup.number()
+        .required('El campo es obligatorio'),
+        id_profesion: Yup.number()
         .required('El campo es obligatorio'),
         salario_base: Yup.number()
         .required('campo es obligatorio')
@@ -70,8 +72,6 @@ const registerSchema = Yup.object().shape(
         posicion: Yup.string()
         .required('El campo es obligatorio'),
         fecha_contratacion: Yup.date()
-        .required('El campo es obligatorio'),
-        departamento: Yup.string()
         .required('El campo es obligatorio'),
 
         correo: Yup.string()
@@ -86,67 +86,52 @@ const registerSchema = Yup.object().shape(
             return value === this.resolve(Yup.ref('contrasenia'));
         }).required('El campo es obligatorio'),
 
+        id_rol: Yup.number()
+        .transform(value => (isNaN(value) ? undefined : parseInt(value, 10)))
+
         // id_rol: Yup.string().oneOf([ROLES.USER, ROLES.ADMIN], 'Seleccione un Rol'),
         //id_rol: Yup.string().required('El campo es obligatorio'),
     }
 )
 
 
-export default function FormikRegister({dataCountries, dataDepartaments, dataMunicipios}) {
+export default function FormikRegister({dataCountries, dataDepartamentsCuontries, dataMunicipios ,dataDepartamentsCompanie, dataProfessions}) {
     const modeSelector = useSelector(selectDarkMode);
 
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [message, setMessage] = useState('');
-    const [getPais, setPais] = useState('');
-    const [getDepartamento, setDepartamento] = useState('');
-    // console.log(getMunicipios);
-    // console.log(getPais);
+    
     const initialRegister = {
         cui:'',
         nit:'',
         nombre:'',
         apellido:'',
-        telefono:'',
         pais:'',
         departamento_pais:'',
         id_municipio:'',
         direccion:'',
-
+        telefono:'',
         genero:'',
         fecha_nacimiento:'',
         estado_civil:'',
+        departamento_empresa:'',
         id_profesion:'',
         salario_base:'',
         posicion:'',
         fecha_contratacion:'',
-        departamento:'',
         correo:'',
         contrasenia:'',
         confirmar_contrasenia:'',
-        id_rol:2,//ROLES.USER,
+        id_rol:'',//ROLES.USER,
 
     }
-  
-    function clear(value) {
-        setPais(value);
-        setMunicipio([]);
-    }
-    function mostrarM(value){
-        console.log(value)
-        setDepartamento(value);
-    }
-    function mostrarListaMunicipios() {
-        let lista2 = dataMunicipios.filter(mun => mun.id_pais === Number(getDepartamento));
-        setMunicipio(lista2);
-    }
+
     const [selectedCountry, setSelectedCountry] = useState('');
     const [selectedDepartment, setSelectedDepartment] = useState('');
     const [getMunicipios, setMunicipio] = useState([]);
-    console.log(getMunicipios);
-    console.log(selectedDepartment);
-    console.log(selectedCountry);
+    const [selectedDepartmentCompanie, setSelectedDepartmentCompanie] = useState('');
 
 
     return (
@@ -166,40 +151,43 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                         /*onSubmit Event */
                         onSubmit = {async (values,actions) =>
                             {
-                                 alert(JSON.stringify(values));
-                                // const session = await getSessionNextAuth();
-                                // await new Promise((r) =>{
-                                //         return setTimeout(r, 2000)
-                                //     }
-                                // );
-                                // try{
-                                //     const response = await fetchUserByEmail(values.correo);
-                                //     if(response.data) {
-                                //         alert(JSON.stringify(response.message))
-                                //     }
-                                //     const{confirmar_contrasenia, ...newList}=values;
+                                //alert(values);
+                                // console.log(values);
+                                // let v =Number(values.id_rol);
+                                // console.log(v);
+                                const session = await getSessionNextAuth();
+                                await new Promise((r) =>{
+                                        return setTimeout(r, 2000)
+                                    }
+                                );
+                                try{
+                                    const response = await fetchUserByEmail(values.correo);
+                                    if(response.data) {
+                                        alert(JSON.stringify(response.message))
+                                    }
+                                    const{pais,departamento_pais,departamento_empresa, confirmar_contrasenia, ...newList}=values;
 
-                                //     const responseTransaction = await fetchCreateNewEmployeeTransaction(newList);
-                                //     actions.resetForm();
-                                //     if(responseTransaction.data){
-                                //         alert(JSON.stringify(responseTransaction.message));
-                                //     }else{
-                                //         setMessage(responseTransaction.message);
-                                //     }
+                                    const responseTransaction = await fetchCreateNewEmployeeTransaction(newList);
+                                    actions.resetForm();
+                                    if(responseTransaction.data){
+                                        alert(JSON.stringify(responseTransaction.message));
+                                    }else{
+                                        setMessage(responseTransaction.message);
+                                    }
 
-                                //     if(!session?.user){
-                                //         router.push('/auth/login');
-                                //     }
+                                    if(!session?.user){
+                                        router.push('/auth/login');
+                                    }
 
-                                // }catch(error){
-                                //     setMessage(error.response ? error.response.data.message : error.menssage)
-                                // }
+                                }catch(error){
+                                    setMessage(error.response ? error.response.data.message : error.menssage)
+                                }
 
-                                // actions.setSubmitting(false);
+                                actions.setSubmitting(false);
                             }
                         }
                     >
-                        {({errors, touched, isSubmitting, handleSubmit, isValid, dirty, values, setFieldValue})  =>
+                        {({errors, touched, isSubmitting, handleSubmit, isValid, dirty, values, setFieldValue, handleChange})  =>
                             (
                                 <Form className={'flex flex-col gap-y-2 text-black dark:text-white'} onSubmit={handleSubmit}>
                                     <div className='flex gap-2'>
@@ -273,24 +261,6 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                                             )}
                                         </div>
                                     </div>
-
-                                    <label htmlFor="phone" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Numero de telefono</label>
-                                    <div className='flex gap-2 items-center '>
-                                        <span className=' text-black bg-gray-200 h-11 flex items-center justify-center p-1 rounded border-2'>+502</span>
-                                        <Field
-                                            autoComplete="phone"
-                                            id="phone"
-                                            name="telefono"
-                                            placeholder="xxxx-xxxx"
-                                            type='text'
-                                            className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                        />
-                                        {errors.telefono && touched.telefono && (
-                                            <div className='text-red-700 text-sm'>
-                                                <ErrorMessage name='telefono'></ErrorMessage>
-                                            </div>
-                                        )}
-                                    </div>
                                     <div className='flex gap-2'>
                                         <div className='flex-1'>
                                         <label htmlFor="country" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Pais</label>
@@ -301,8 +271,8 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                                             setSelectedCountry(selectedValue);
                                             setFieldValue('pais', selectedValue);
                                             setSelectedDepartment(''); // Resetea el departamento al cambiar el país
-                                            setFieldValue('departamento', '');
-                                            setFieldValue('municipio', ''); // Resetea el municipio al cambiar el país
+                                            setFieldValue('departamento_pais', '');
+                                            setFieldValue('id_municipio', ''); // Resetea el municipio al cambiar el país
                                         }}
                                         >
                                             <option value="" disabled selected>Seleccione Pais</option>
@@ -318,18 +288,18 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                                         )}
                                         </div>
                                         <div className='flex-3'>
-                                            <label htmlFor="department" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Departamento</label>
-                                            <Field  id='department' name='departamento_pais' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'
+                                            <label htmlFor="department_country" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Departamento</label>
+                                            <Field  id='department_country' name='departamento_pais' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'
                                             value={selectedDepartment}
                                             onChange={(event) => {
                                                 const selectedValue = event.target.value;
                                                 setSelectedDepartment(selectedValue);
                                                 setFieldValue('departamento_pais', selectedValue);
-                                                setFieldValue('municipio', ''); // Resetea el municipio al cambiar el departamento
+                                                setFieldValue('id_municipio', ''); // Resetea el municipio al cambiar el departamento
                                             }}>
                                                 <option value="" disabled selected>Seleccione Departamento</option>
                                                 {
-                                                    selectedCountry ? dataDepartaments.filter(dep => dep.id_pais === Number(selectedCountry)).map(({id, nombre}) => (
+                                                    selectedCountry ? dataDepartamentsCuontries.filter(dep => dep.id_pais === Number(selectedCountry)).map(({id, nombre}) => (
                                                         <option key={id} value={id}>{nombre}</option>
                                                     )) : null
                                                 }
@@ -350,7 +320,7 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                                                 <option value="" disabled selected>Seleccione municipio</option>
                                                 {
                                                     dataMunicipios.filter(mun => mun.id_departamento === Number(selectedDepartment)).map(({id, nombre}) => (
-                                                        <option key={id} value={id} >{nombre}</option>
+                                                        <option key={id} value={Number(id)} >{nombre}</option>
                                                     ))
                                                 }
                                             </Field>
@@ -374,12 +344,29 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                                             <ErrorMessage name='direccion'></ErrorMessage>
                                         </div>
                                     )}
-
-                                    <div>
-                                        <span className="block text-gray-500 cursor-text text-base font-semibold mb-2">Genero</span>
-                                        <div className="flex gap-3">
-
-                                            <div className="flex items-center mb-2 gap-2">
+                                    <div className='flex justify-between gap-2 p-2'>
+                                        <label htmlFor="phone" className="block text-gray-500 cursor-text text-base font-semibold">Numero de telefono</label>
+                                        <div className='flex items-center '>
+                                            <span className=' text-black bg-gray-200 h-11 flex items-center justify-center p-1 rounded border-2'>+502</span>
+                                            <Field
+                                                autoComplete="phone"
+                                                id="phone"
+                                                name="telefono"
+                                                placeholder="xxxx-xxxx"
+                                                type='text'
+                                                className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                            />
+                                        </div>
+                                    </div>
+                                    {errors.telefono && touched.telefono && (
+                                        <div className='text-red-700 text-sm flex justify-end'>
+                                            <ErrorMessage name='telefono'></ErrorMessage>
+                                        </div>
+                                    )}
+                                    <div className='flex flex-col'>
+                                        <div className='flex justify-between items-center gap-2'>
+                                            <span className="block text-gray-500 cursor-text text-base font-semibold ">Genero</span>
+                                            <div className="flex items-center gap-2">
                                                 <Field
                                                     id="gender-male"
                                                     type="radio"
@@ -395,42 +382,40 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                                                     name="genero"
                                                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                                                 <label htmlFor="gender-female" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Femenino</label>
-
-                                                {errors.genero && touched.genero && (
-                                                    <div className='text-red-700 text-sm'>
-                                                        <ErrorMessage name='genero'></ErrorMessage>
-                                                    </div>
-                                                )}
-
                                             </div>
                                         </div>
+                                        {errors.genero && touched.genero && (
+                                            <div className='text-red-700 text-sm flex justify-end'>
+                                                <ErrorMessage name='genero'></ErrorMessage>
+                                            </div>
+                                        )}
                                     </div>
-
-                                    <label htmlFor="birthday" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Fecha de Nacimiento</label>
-                                    <Field
-                                        autoComplete="birthday"
-                                        id="birthday"
-                                        name="fecha_nacimiento"
-                                        type='date'
-                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                    />
+                                    <div className='flex justify-between gap-2'>
+                                        <label htmlFor="birthday" className="block text-gray-500 cursor-text text-base font-semibold">Fecha de Nacimiento</label>
+                                        <Field
+                                            autoComplete="birthday"
+                                            id="birthday"
+                                            name="fecha_nacimiento"
+                                            type='date'
+                                            className="rounded border-2 border-gray-200 text-sm  leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        />
+                                    </div>
                                     {errors.fecha_nacimiento && touched.fecha_nacimiento && (
-                                        <div className='text-red-700 text-sm'>
+                                        <div className='text-red-700 text-sm flex justify-end'>
                                             <ErrorMessage name='fecha_nacimiento'></ErrorMessage>
                                         </div>
                                     )}
-                                    <div>
-                                        <span className="block text-gray-500 cursor-text text-base font-semibold mb-2">Estado Civil</span>
+                                    <div className='flex justify-between gap-2'>
+                                        <span className="block text-gray-500 cursor-text text-base font-semibold">Estado Civil</span>
                                         <div className="flex gap-3">
-
-                                            <div className="flex items-center mb-2 gap-1">
+                                            <div className="flex items-center gap-1">
                                                 <Field
                                                     id="state-single"
                                                     type="radio"
                                                     value="0"
                                                     name="estado_civil"
-                                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                                                <label htmlFor="gender-single" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Soltero</label>
+                                                    className="w-4 h-4  text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                                                <label htmlFor="gender-single" className="pr-2 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Soltero</label>
 
                                                 <Field
                                                     id="state-married"
@@ -438,14 +423,14 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
                                                     value="1"
                                                     name="estado_civil"
                                                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                                                <label htmlFor="state-married" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Casado</label>
+                                                <label htmlFor="state-married" className="pr-2 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Casado</label>
                                                 <Field
                                                     id="state-divorced"
                                                     type="radio"
                                                     value="2"
                                                     name="estado_civil"
                                                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                                                <label htmlFor="state-divorced" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Divorciado</label>
+                                                <label htmlFor="state-divorced" className="pr-2 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Divorciado</label>
                                                 <Field
                                                     id="state-Widowed"
                                                     type="radio"
@@ -456,137 +441,171 @@ export default function FormikRegister({dataCountries, dataDepartaments, dataMun
 
                                             </div>
                                         </div>
-                                        {errors.estado_civil && touched.estado_civil && (
-                                            <div className='text-red-700 text-sm'>
-                                                <ErrorMessage name='estado_civil'></ErrorMessage>
-                                            </div>
-                                        )}
-
                                     </div>
-
-
-                                    <label htmlFor="profession" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Profesion</label>
-                                    <Field id='profession' name='id_profesion' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'>
-                                        <option value="" disabled selected>Seleccione Profesion</option>
-                                        <option value={1}>Administracion</option>
-                                        <option value={2}>Contador</option>
-                                        <option value={3}>HHRR</option>
-                                    </Field>
-                                    {errors.id_profesion && touched.id_profesion && (
-                                        <div className='text-red-700 text-sm'>
-                                            <ErrorMessage name='id_profesion'></ErrorMessage>
+                                    {errors.estado_civil && touched.estado_civil && (
+                                        <div className='text-red-700 text-sm flex justify-end'>
+                                            <ErrorMessage name='estado_civil'></ErrorMessage>
                                         </div>
                                     )}
-                                    <label htmlFor="base_salary" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Salario base</label>
-                                    <Field
-                                        autoComplete="base_salary"
-                                        id="base_salary"
-                                        name="salario_base"
-                                        type='number'
-                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
+
+                                    <div className='flex gap-2 py-4'>
+                                        <div className='flex-1'>
+                                            <label htmlFor="department_companie" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Departamento Empresa</label>
+                                            <Field id='department_companie' name='departamento_empresa' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'
+                                            value={selectedDepartmentCompanie}
+                                            onChange={(event) => {
+                                                const selectedValue = event.target.value;
+                                                setSelectedDepartmentCompanie(selectedValue);
+                                                setFieldValue('departamento_empresa', selectedValue);
+                                                setFieldValue('id_profesion', null);
+                                            }}>
+                                                <option value="" disabled selected>Seleccione Departamento</option>
+                                                {
+                                                    dataDepartamentsCompanie.map(({id, nombre}) => (
+                                                        <option key={Number(id)} value={Number(id)}>{nombre}</option>
+                                                    ))
+                                                }
+                                            </Field>
+                                            {errors.departamento_empresa && touched.departamento_empresa && (
+                                                <div className='text-red-700 text-sm'>
+                                                    <ErrorMessage name='departamento_empresa'></ErrorMessage>
+                                                </div>
+                                            )}
+                                        </div>
+
+
+                                        <div className='flex-1'>
+                                            <label htmlFor="profession" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Profesion</label>
+                                            <Field id='profession' name='id_profesion' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'
+                                            >
+                                                <option value="" disabled selected>Seleccione Profesion</option>
+                                                {
+                                                    selectedDepartmentCompanie ? dataProfessions.filter(profesion => profesion.id_departamentoempresa === Number(selectedDepartmentCompanie)).map(({id, nombre}) => (
+                                                        <option key={Number(id)} value={Number(id)}>{nombre}</option>
+                                                    )) : null
+                                                }
+                                            </Field>
+                                            {errors.id_profesion && touched.id_profesion && (
+                                                <div className='text-red-700 text-sm'>
+                                                    <ErrorMessage name='id_profesion'></ErrorMessage>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className='flex justify-between gap-2'>
+                                        <label htmlFor="base_salary" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Salario base</label>
+                                        <div className='flex w-2/5'>
+                                            <span className=' text-black bg-gray-200 h-11 flex items-center justify-center p-1 rounded border-2'>Q</span>
+                                            <Field
+                                            autoComplete="base_salary"
+                                            id="base_salary"
+                                            name="salario_base"
+                                            type='number'
+                                            className=" w-full rounded border-2 border-gray-200 text-sm leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
+                                        </div>
+                                    </div>
                                     {errors.salario_base && touched.salario_base && (
-                                        <div className='text-red-700 text-sm'>
+                                        <div className='text-red-700 text-sm flex justify-end'>
                                             <ErrorMessage name='salario_base'></ErrorMessage>
                                         </div>
                                     )}
-                                    <label htmlFor="position" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Posicion</label>
-                                    <Field
+                                    <div className='flex justify-between gap-2'>
+                                        <label htmlFor="position" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Posicion</label>
+                                        <Field
                                         autoComplete="position"
                                         id="position"
                                         name="posicion"
                                         type='text'
-                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
+                                        className="w-2/5 rounded border-2 border-gray-200 text-sm leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
+                                    </div>
                                     {errors.posicion && touched.posicion && (
-                                        <div className='text-red-700 text-sm'>
+                                        <div className='text-red-700 text-sm flex justify-end'>
                                             <ErrorMessage name='posicion'></ErrorMessage>
                                         </div>
                                     )}
-                                    <label htmlFor="hiring_date" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Fecha de Contratacion</label>
-                                    <Field
-                                        autoComplete="hiring_date"
-                                        id="hiring_date"
-                                        name="fecha_contratacion"
-                                        type='date'
-                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4  tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                    />
+                                    <div className='flex justify-between gap-2'>
+                                        <label htmlFor="hiring_date" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Fecha de Contratacion</label>
+                                        <Field
+                                            autoComplete="hiring_date"
+                                            id="hiring_date"
+                                            name="fecha_contratacion"
+                                            type='date'
+                                            className="w-2/5 rounded border-2 border-gray-200 text-sm leading-4  tracking-normal appearance-none block h-11  p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        />
+                                    </div>
                                     {errors.fecha_contratacion && touched.fecha_contratacion && (
-                                        <div className='text-red-700 text-sm'>
+                                        <div className='text-red-700 text-sm flex justify-end'>
                                             <ErrorMessage name='fecha_contratacion'></ErrorMessage>
                                         </div>
                                     )}
-                                    <label htmlFor="department" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Departamento</label>
-                                    <Field
-                                        autoComplete="department"
-                                        id="department"
-                                        name="departamento"
-                                        type='text'
-                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"/>
-                                    {errors.departamento && touched.departamento && (
-                                        <div className='text-red-700 text-sm'>
-                                            <ErrorMessage name='departamento'></ErrorMessage>
-                                        </div>
-                                    )}
-
-                                    <label htmlFor="email" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Correo Electronico</label>
-                                    <Field
-                                        autoComplete="email"
-                                        id="email"
-                                        name="correo"
-                                        placeholder="example@email.com"
-                                        type='email'
-                                        className="rounded border-2 border-gray-200 text-sm w-full leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                    />
+                                   <div className='flex justify-between gap-2'>
+                                        <label htmlFor="email" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Correo Electronico</label>
+                                        <Field
+                                            autoComplete="email"
+                                            id="email"
+                                            name="correo"
+                                            placeholder="example@email.com"
+                                            type='email'
+                                            className="w-2/5 rounded border-2 border-gray-200 text-sm leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                        />
+                                   </div>
                                     {errors.correo && touched.correo && (
-                                        <div className='text-red-700 text-sm'>
+                                        <div className='text-red-700 text-sm flex justify-end'>
                                             <ErrorMessage name='correo'></ErrorMessage>
                                         </div>
                                     )}
 
-                                    <label  htmlFor="password" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Contraseña</label>
-                                    <div className='flex'>
-                                        <Field
-                                            autoComplete="current-password"
-                                            id="password"
-                                            name="contrasenia"
-                                            type={showPassword ? "text" : "password"}
-                                            className="rounded border-2 border-gray-200 text-sm w-full leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                        />
-                                        <span onClick={()=>setShowPassword(!showPassword)}  className='rounded border-2  bg-gray-200 w-8  flex items-center justify-center cursor-pointer'>{showPassword ? <EyeIcon className='text-black'></EyeIcon> : <EyeSlashIcon className='text-black'></EyeSlashIcon>}</span>
+                                    <div className='flex justify-between gap-2'>
+                                        <label  htmlFor="password" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Contraseña</label>
+                                        <div className='flex'>
+                                            <Field
+                                                autoComplete="current-password"
+                                                id="password"
+                                                name="contrasenia"
+                                                type={showPassword ? "text" : "password"}
+                                                className="rounded border-2 border-gray-200 text-sm leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                            />
+                                            <span onClick={()=>setShowPassword(!showPassword)}  className='rounded border-2  bg-gray-200 w-8  flex items-center justify-center cursor-pointer'>{showPassword ? <EyeIcon className='text-black'></EyeIcon> : <EyeSlashIcon className='text-black'></EyeSlashIcon>}</span>
+                                        </div>
                                     </div>
                                     {errors.contrasenia && touched.contrasenia && (
-                                        <div className='text-red-700 text-sm'>
+                                        <div className='text-red-700 text-sm flex justify-end'>
                                             <ErrorMessage name='contrasenia'></ErrorMessage>
                                         </div>
                                     )}
 
-                                    <label htmlFor="confirmPassword" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Confirmar Contraseña</label>
-                                    <div className='flex'>
-                                        <Field
-                                            autoComplete="new-password"
-                                            id="confirmPassword"
-                                            name="confirmar_contrasenia"
-                                            type={showConfirmPassword ? "text" : "password"}
-                                            className="rounded border-2 border-gray-200 text-sm w-full leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
-                                        />
-                                        <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}  className='rounded border-2  bg-gray-200 w-8  flex items-center justify-center cursor-pointer'>{showConfirmPassword ? <EyeIcon className='text-black'></EyeIcon> : <EyeSlashIcon className='text-black'></EyeSlashIcon>}</span>
-
+                                    <div className='flex justify-between gap-2'>
+                                        <label htmlFor="confirmPassword" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Confirmar Contraseña</label>
+                                        <div className='flex'>
+                                            <Field
+                                                autoComplete="new-password"
+                                                id="confirmPassword"
+                                                name="confirmar_contrasenia"
+                                                type={showConfirmPassword ? "text" : "password"}
+                                                className="rounded border-2 border-gray-200 text-sm w-2/5leading-4 tracking-normal appearance-none block h-11 m-0 p-3 focus:border-green-400 focus:ring-green-400  outline-0"
+                                            />
+                                            <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}  className='rounded border-2  bg-gray-200 w-8  flex items-center justify-center cursor-pointer'>{showConfirmPassword ? <EyeIcon className='text-black'></EyeIcon> : <EyeSlashIcon className='text-black'></EyeSlashIcon>}</span>
+                                        </div>
                                     </div>
                                     {errors.confirmar_contrasenia && touched.confirmar_contrasenia && (
-                                        <div className='text-red-700 text-sm'>
+                                        <div className='text-red-700 text-sm flex justify-end'>
                                             <ErrorMessage name='confirmar_contrasenia'></ErrorMessage>
                                         </div>
                                     )}
 
-                                    <label htmlFor='rol'className='block text-gray-500 cursor-text text-base font-semibold mb-2'>Rol</label>
-                                        <Field id='rol' name='id_rol' component='select' preventDefault={ROLES.USER} className='rounded border-2 border-gray-200 focus:border-green-400 focus:ring-green-400  outline-0'>
+                                    <div className='flex justify-between gap-2'>
+                                        <label htmlFor='rol'className='block text-gray-500 cursor-text text-base font-semibold mb-2'>Rol</label>
+                                        <Field onChange={handleChange} id='rol' name='id_rol' as='select' preventDefault={ROLES.USER} className='rounded border-2 border-gray-200 w-2/5 focus:border-green-400 focus:ring-green-400  outline-0'>
                                             <option value={2}>Usuario</option>
-                                            <option value={1}>Admin</option>
+                                            <option value={Number(1)}>Admin</option>
                                         </Field>
-                                        {errors.id_rol && touched.id_rol && (
-                                            <div className='text-red-700 text-sm'>
-                                                <ErrorMessage name='id_rol'></ErrorMessage>
-                                            </div>
-                                        )}
+                                    </div>
+                                    {errors.id_rol && touched.id_rol && (
+                                        <div className='text-red-700 text-sm flex justify-end'>
+                                            <ErrorMessage name='id_rol'></ErrorMessage>
+                                        </div>
+                                    )}
 
                                     <div className='flex flex-col pt-2 gap-2'>
                                         <Link href="/auth/login" className="text-sm text-green-400"><p>¿Ya tiene una cuenta? Iniciar sesion</p></Link>

@@ -1,4 +1,24 @@
 export async function FunctionAgregarUsuario_y_empleado (client) {
+    /**
+    SELECT agregar_usuario_y_empleado(
+    '1222222222222',
+    '223456789',
+    'Juan',
+    'Perez',
+    '3456789',
+    'calle 123',
+    1,
+    1,
+    '2023-01-01',
+    1,
+    1,
+    3000,
+    'nose',
+    '2023-01-01',
+    'criyattojin2@gmail.com',
+    'perromon12',
+    2);
+    */
     try {
         await client.sql`CREATE OR REPLACE FUNCTION agregar_usuario_y_empleado(
         cui VARCHAR(50),
@@ -7,6 +27,7 @@ export async function FunctionAgregarUsuario_y_empleado (client) {
         apellido VARCHAR(30),
         telefono VARCHAR(20),
         direccion VARCHAR(50),
+        id_municipio INTEGER,
         genero INT,
         fecha_nacimiento DATE,
         estado_civil INT,
@@ -14,16 +35,16 @@ export async function FunctionAgregarUsuario_y_empleado (client) {
         salario_base DECIMAL(10, 2),
         posicion VARCHAR(50),
         fecha_contratacion DATE,
-        departamento VARCHAR(60),
         correo VARCHAR(30),
         contrasenia VARCHAR(80),
-        id_rol integer
+        id_rol INTEGER,
+        createBy INTEGER
         )
         RETURNS VOID
         LANGUAGE plpgsql
         AS $$
         DECLARE
-        id_usuario UUID;
+        id_usuario INTEGER;
         BEGIN
         -- Agregar usuario y obtener ID
         INSERT INTO Usuarios (correo, contrasenia)
@@ -31,8 +52,8 @@ export async function FunctionAgregarUsuario_y_empleado (client) {
         RETURNING id INTO id_usuario;
 
         -- Agregar empleado con el ID del usuario obtenido
-        INSERT INTO Empleados (cui, nit, nombre, apellido, telefono, direccion, genero, fecha_nacimiento, estado_civil, id_profesion, salario_base, posicion, fecha_contratacion, departamento, id_rol, id_usuario)
-        VALUES (cui, nit, nombre, apellido, telefono, direccion, genero, fecha_nacimiento, estado_civil, id_profesion, salario_base, posicion, fecha_contratacion, departamento, id_rol, id_usuario);
+        INSERT INTO Empleados (cui, nit, nombre, apellido, telefono, direccion,id_municipio, genero, fecha_nacimiento, estado_civil, id_profesion, salario_base, posicion, fecha_contratacion, id_rol, id_usuario, createBy)
+        VALUES (cui, nit, nombre, apellido, telefono, direccion,id_municipio, genero, fecha_nacimiento, estado_civil, id_profesion, salario_base, posicion, fecha_contratacion, id_rol, id_usuario, createBy);
 
         EXCEPTION
         WHEN OTHERS THEN

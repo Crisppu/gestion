@@ -1,38 +1,150 @@
+INSERT INTO departamentospais (nombre,id_pais) VALUES
+('Alta Verapaz',1),
+('Baja Verapaz',1),
+('Chimaltenango',1),
+('Chiquimula',1),
+('Guatemala',1),
+('El Progreso',1),
+('Escuintla',1),
+('Huehuetenango',1),
+('Izabal',1),
+('Jalapa',1),
+('Jutiapa',1),
+('Peten',1),
+('Quetzaltenango',1),
+('Quiche',1),
+('Retalhuleu',1),
+('Sacatepequez',1),
+('San Marcos',1),
+('Santa Rosa',1),
+('Solola',1),
+('Suchitepequez',1),
+('Totonicapan',1),
+('Zacapa',1);
+
 
 insert into municipios (nombre, id_departamento) values
-('Escuintla', 7),
-('Guanagazapa', 7),
-('Iztapa', 7),
-('La Democracia', 7),
-('La Gomera', 7),
-('Masagua', 7),
-('Nueva Concepcion', 7),
-('Palin', 7),
-('p.San Jose', 7),
-('San Vicente Pacaya', 7),
-('Santa Lucia Cotzumalguapa', 7),
-('Sipacate', 7),
-('Siquinala', 7),
-('Tiquisate', 7);
+('Chahal', 2),
+('Chisec', 2),
+('Coban', 2),
+('Fray Bartolome de las Casas', 2),
+('La Tinta', 2),
+('Lanquin', 2),
+('Panzos', 2),
+('Raxruha', 2),
+('San Cristobal Verapaz', 2),
+('San Juan Chamelco', 2),
+('San Pedro Carcha', 2),
+('Santa Cruz Verapaz', 2),
+('Santa Maria Cahabon', 2),
+('Senahu', 2),
+('Tactic', 2),
+('Tamahu', 2),
+('Tucuru', 2);
 
+
+insert into municipios (nombre, id_departamento) values
+('Cubulco', 3),
+('Granados', 3),
+('Purulha', 3),
+('Rabinal', 3),
+('Salama', 3),
+('San Jeranimo', 3),
+('San Miguel Chicaj', 3),
+('Santa Cruz el Chol', 3);
+
+
+insert into municipios (nombre, id_departamento) values
+('Acatenango', 4),
+('Chimaltenango', 4),
+('El Tejar', 4),
+('Parramos', 4),
+('Patzicia', 4),
+('Patzun', 4),
+('Pochuta', 4),
+('San Andres Itzapa', 4),
+('San Jose Poaquíl', 4),
+('San Juan Comalapa', 4),
+('San Martín Jilotepeque', 4),
+('Santa Apolonia', 4),
+('Santa Cruz Balanya', 4),
+('Tecpan', 4),
+('Yepocapa', 4),
+('Zaragoza', 4);
+
+Camotan
+Chiquimula
+Concepcion Las Minas
+Esquipulas
+Ipala
+San Juan Ermita
+Jocotan
+Olopa
+Quetzaltepeque
+San Jacinto
+San José la Arada
+
+insert into municipios (nombre, id_departamento) values
+('Camotela', 5),
+('Chiquimulilla', 5),
+('Concepcion Las Minas', 5),
+('Esquipulas', 5),
+('Ipala', 5),
+('San Juan Ermita', 5),
+('Jocotan', 5),
+('Olopa', 5),
+('Quetzaltepeque', 5),
+('San Jacinto', 5),
+('San José la Arada', 5);
 
 INSERT INTO municipios (nombre, id_departamento) VALUES
-('Cuidad de Guatemala', 8),
-('Mixco', 8),
-('Villa Nueva', 8),
-('San Miguel Petapa', 8),
-('Santa Catarina Pinula', 8),
-('San Juan Sacatepéquez', 8),
-('San Pedro Sacatepéquez', 8),
-('San Raymundo', 8),
-('Fraijanes', 8),
-('Palencia', 8),
-('Chinautla', 8),
-('San Jose del Golfo', 8),
-('San Jose Pinula', 8),
-('Amatitlan', 8)
-('Villa Canales', 8),
-('Villa Nueva', 8);
+('Cuidad de Guatemala', 6),
+('Mixco', 6),
+('Villa Nueva', 6),
+('San Miguel Petapa', 6),
+('Santa Catarina Pinula', 6),
+('San Juan Sacatepéquez', 6),
+('San Pedro Sacatepéquez', 6),
+('San Raymundo', 6),
+('Fraijanes', 6),
+('Palencia', 6),
+('Chinautla', 6),
+('San Jose del Golfo', 6),
+('San Jose Pinula', 6),
+('Amatitlan', 6)
+('Villa Canales', 6),
+('Villa Nueva', 6);
+
+
+
+insert into municipios (nombre, id_departamento) values
+('El Jícaro', 7),
+('Guastatoya', 7),
+('Morazan', 7),
+('San Agustín Acasaguastlan', 7),
+('San Antonio La Paz', 7),
+('San Cristobal Acasaguastlan', 7),
+('Sanarate', 7),
+('Sansare', 7);
+
+
+insert into municipios (nombre, id_departamento) values
+('Escuintla', 8),
+('Guanagazapa', 8),
+('Iztapa', 8),
+('La Democracia', 8),
+('La Gomera', 8),
+('Masagua', 8),
+('Nueva Concepcion', 8),
+('Palin', 8),
+('p.San Jose', 8),
+('San Vicente Pacaya', 8),
+('Santa Lucia Cotzumalguapa', 8),
+('Sipacate', 8),
+('Siquinala', 8),
+('Tiquisate', 8);
+
+
 
 insert into municipios (nombre, id_departamento) values
 ('Aguacatan', 9),
@@ -197,9 +309,11 @@ insert into municipios (nombre, id_departamento) values
 ('Sumpango', 17);
 
 insert into municipios (nombre, id_departamento) values
-('Tacana', 18),
-('Tajumulco', 18),
-('Tejutla', 18),
+('Ayutla', 18),
+('Catarina', 18),
+('Comitancillo', 18),
+('Concepción Tutuapa', 18),
+('El Quetzal', 18),
 ('El Tumbador', 18),
 ('Esquipulas Palo Gordo', 18),
 ('Ixchiguan', 18),
@@ -209,13 +323,13 @@ insert into municipios (nombre, id_departamento) values
 ('Nuevo Progreso', 18),
 ('Ocos', 18),
 ('Pajapita', 18),
-('Río Blanco', 18).
+('Río Blanco', 18),
 ('San Antonio Sacatepequez', 18),
 ('San Cristobal Cucho', 18),
 ('San Jose El Rodeo', 18),
-('San Jose Ojetenam', 18)
+('San Jose Ojetenam', 18),
 ('San Lorenzo', 18),
-('San Marcos', 18).
+('San Marcos', 18),
 ('San Miguel Ixtahuacan', 18),
 ('San Pablo', 18),
 ('San Pedro Sacatepequez', 18),
@@ -226,93 +340,107 @@ insert into municipios (nombre, id_departamento) values
 ('Tajumulco', 18),
 ('Tejutla', 18);
 
-
-
-
-insert into municipios (nombre, id_departamento) values
-('Barberena', 20),
-('Casillas', 20),
-('Chiquimulilla', 20),
-('Cuilapa', 20),
-('Guazacapán', 20),
-('Nueva Santa Rosa', 20),
-('Oratorio', 20),
-('Pueblo Nuevo Viñas', 20),
-('San Juan Tecuaco', 20),
-('San Rafael las Flores', 20),
-('Santa Cruz Naranjo', 20),
-('Santa María Ixhuatán', 20),
-('Santa Rosa de Lima', 20),
-('Taxisco', 20);
+Barberena
+Casillas
+Chiquimulilla
+Cuilapa
+Guazacapán
+Nueva Santa Rosa
+Oratorio
+Pueblo Nuevo Viñas
+San Juan Tecuaco
+San Rafael las Flores
+Santa Cruz Naranjo
+Santa María Ixhuatán
+Santa Rosa de Lima
+Taxisco
 
 
 insert into municipios (nombre, id_departamento) values
-('Concepcion', 21),
-('Nahuala', 21),
-('Panajachel', 21),
-('San Andes Semetabaj', 21),
-('San Antonio Palopo', 21),
-('San Jose Chacaya', 21),
-('San Juan La Laguna', 21),
-('San Lucas Toliman', 21),
-('San Marcos La Laguna', 21),
-('San Pablo La Laguna', 21),
-('San Pedro La Laguna', 21),
-('Santa Catarina Ixtahuacan', 21),
-('Santa Catarina Palopo', 21),
-('Santa Clara La Laguna', 21),
-('Santa Cruz La Laguna', 21),
-('Santa Lucía Utatlan', 21),
-('Santa María Visitacion', 21),
-('Santiago Atitlan', 21),
-('Solola', 21);
+('Barberena', 19),
+('Casillas', 19),
+('Chiquimulilla', 19),
+('Cuilapa', 19),
+('Guazacapán', 19),
+('Nueva Santa Rosa', 19),
+('Oratorio', 19),
+('Pueblo Nuevo Viñas', 19),
+('San Juan Tecuaco', 19),
+('San Rafael las Flores', 19),
+('Santa Cruz Naranjo', 19),
+('Santa María Ixhuatán', 19),
+('Santa Rosa de Lima', 19),
+('Taxisco', 19);
 
 
 insert into municipios (nombre, id_departamento) values
-('Chicacao', 22),
-('Cuyotenango', 22),
-('Mazatenango', 22),
-('Patulul', 22),
-('Pueblo Nuevo', 22),
-('Río Bravo', 22),
-('Samayac', 22),
-('San Antonio Suchitepequez', 22),
-('San Bernardino', 22),
-('San Francisco Zapotitlan', 22),
-('San Gabriel', 22),
-('San Jose El Idolo', 22),
-('San Jose La Máquina', 22),
-('San Juan Bautista', 22),
-('San Lorenzo', 22),
-('San Miguel Panan', 22),
-('San Pablo Jocopilas', 22),
-('Santa Barbara', 22),
-('Santo Domingo Suchitepequez', 22),
-('Santo Tomas La Union', 22),
-('Zunilito', 22);
+('Concepcion', 20),
+('Nahuala', 20),
+('Panajachel', 20),
+('San Andes Semetabaj', 20),
+('San Antonio Palopo', 20),
+('San Jose Chacaya', 20),
+('San Juan La Laguna', 20),
+('San Lucas Toliman', 20),
+('San Marcos La Laguna', 20),
+('San Pablo La Laguna', 20),
+('San Pedro La Laguna', 20),
+('Santa Catarina Ixtahuacan', 20),
+('Santa Catarina Palopo', 20),
+('Santa Clara La Laguna', 20),
+('Santa Cruz La Laguna', 20),
+('Santa Lucía Utatlan', 20),
+('Santa María Visitacion', 20),
+('Santiago Atitlan', 20),
+('Solola', 20);
+
 
 insert into municipios (nombre, id_departamento) values
-('San Andres Xecul', 23),
-('San Bartolo', 23),
-('San Cristobal Totonicapan', 23),
-('San Francisco El Alto', 23),
-('Santa Lucía La Reforma', 23),
-('Santa María Chiquimula', 23),
-('Totonicapan', 23);
+('Chicacao', 21),
+('Cuyotenango', 21),
+('Mazatenango', 21),
+('Patulul', 21),
+('Pueblo Nuevo', 21),
+('Río Bravo', 21),
+('Samayac', 21),
+('San Antonio Suchitepequez', 21),
+('San Bernardino', 21),
+('San Francisco Zapotitlan', 21),
+('San Gabriel', 21),
+('San Jose El Idolo', 21),
+('San Jose La Máquina', 21),
+('San Juan Bautista', 21),
+('San Lorenzo', 21),
+('San Miguel Panan', 21),
+('San Pablo Jocopilas', 21),
+('Santa Barbara', 21),
+('Santo Domingo Suchitepequez', 21),
+('Santo Tomas La Union', 21),
+('Zunilito', 21);
 
 insert into municipios (nombre, id_departamento) values
-('Cabañas', 24),
-('Estanzuela', 24),
-('Gualan', 24),
-('Huite', 24),
-('La Union', 24),
-('Río Hondo', 24),
-('San Diego', 24),
-('San Jorge', 24),
-('Teculutan', 24),
-('Usumatlan', 24),
-('Zacapa', 24);
+('San Andres Xecul', 22),
+('San Bartolo', 22),
+('San Cristobal Totonicapan', 22),
+('San Francisco El Alto', 22),
+('Santa Lucía La Reforma', 22),
+('Santa María Chiquimula', 22),
+('Totonicapan', 22);
 
+insert into municipios (nombre, id_departamento) values
+('Cabañas', 23),
+('Estanzuela', 23),
+('Gualan', 23),
+('Huite', 23),
+('La Union', 23),
+('Río Hondo', 23),
+('San Diego', 23),
+('San Jorge', 23),
+('Teculutan', 23),
+('Usumatlan', 23),
+('Zacapa', 23);
+
+-- MEXICO
 insert into municipios (nombre, id_departamento) values
 ('Durango',25),
 ('Gomez Palacio',25),
