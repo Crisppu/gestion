@@ -11,7 +11,7 @@ export default async function RegisterPage() {
     const municipios = await fetchGetAllMunicipios();
     const departamentsCompanie = await fetchGetAllDepartamentsCompanie();
     const professions = await fetchGetAllProfessions();
-    console.log(municipios.data);
+    //console.log(municipios.data);
     return (
         <FormikRegister
         dataCountries={countries.data}

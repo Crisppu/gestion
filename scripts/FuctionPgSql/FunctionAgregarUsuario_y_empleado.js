@@ -25,9 +25,9 @@ export async function FunctionAgregarUsuario_y_empleado (client) {
         nit VARCHAR(30),
         nombre VARCHAR(30),
         apellido VARCHAR(30),
-        telefono VARCHAR(20),
-        direccion VARCHAR(50),
         id_municipio INTEGER,
+        direccion VARCHAR(50),
+        telefono VARCHAR(20),
         genero INT,
         fecha_nacimiento DATE,
         estado_civil INT,
@@ -52,8 +52,8 @@ export async function FunctionAgregarUsuario_y_empleado (client) {
         RETURNING id INTO id_usuario;
 
         -- Agregar empleado con el ID del usuario obtenido
-        INSERT INTO Empleados (cui, nit, nombre, apellido, telefono, direccion,id_municipio, genero, fecha_nacimiento, estado_civil, id_profesion, salario_base, posicion, fecha_contratacion, id_rol, id_usuario, createBy)
-        VALUES (cui, nit, nombre, apellido, telefono, direccion,id_municipio, genero, fecha_nacimiento, estado_civil, id_profesion, salario_base, posicion, fecha_contratacion, id_rol, id_usuario, createBy);
+        INSERT INTO Empleados (cui, nit, nombre, apellido,id_municipio, direccion, telefono, genero, fecha_nacimiento, estado_civil, id_profesion, salario_base, posicion, fecha_contratacion, id_rol, id_usuario, createBy)
+        VALUES (cui, nit, nombre, apellido,id_municipio, direccion, telefono, genero, fecha_nacimiento, estado_civil, id_profesion, salario_base, posicion, fecha_contratacion, id_rol, id_usuario, createBy);
 
         EXCEPTION
         WHEN OTHERS THEN

@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { fetchCreateNewEmployeeTransaction } from '@/services/transaccionService/transiccionUsuarioAndEmpleadoApiService';
 import { getSessionNextAuth } from "@/app/api/auth/[...nextauth]/getSessionAsync";
+import { calcLength } from 'framer-motion';
 
 const registerSchema = Yup.object().shape(
   //shape: nos va permitir especificar la estructura de ese objeto
@@ -102,7 +103,7 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [message, setMessage] = useState('');
-    
+    console.log(dataMunicipios);
     const initialRegister = {
         cui:'',
         nit:'',
@@ -124,7 +125,7 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
         correo:'',
         contrasenia:'',
         confirmar_contrasenia:'',
-        id_rol:'',//ROLES.USER,
+        id_rol:2,//ROLES.USER,
 
     }
 
@@ -151,23 +152,45 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
                         /*onSubmit Event */
                         onSubmit = {async (values,actions) =>
                             {
-                                //alert(values);
-                                // console.log(values);
-                                // let v =Number(values.id_rol);
-                                // console.log(v);
                                 const session = await getSessionNextAuth();
                                 await new Promise((r) =>{
                                         return setTimeout(r, 2000)
                                     }
                                 );
+                                const municipioId = Number(values.id_municipio);
+                                const profesionId = Number(values.id_profesion);
+                                const genero = Number(values.genero);
+                                const estado_civil = Number(values.estado_civil);
                                 try{
                                     const response = await fetchUserByEmail(values.correo);
                                     if(response.data) {
                                         alert(JSON.stringify(response.message))
                                     }
-                                    const{pais,departamento_pais,departamento_empresa, confirmar_contrasenia, ...newList}=values;
+                                    // const{pais,departamento_pais,departamento_empresa, confirmar_contrasenia, ...newList}=values;
+                                    // const r = values.id_municipio;
+                                    // console.log(municipioId );
+                                    const ListEmployee = {
+                                        cui: values.cui,
+                                        nit: values.nit,
+                                        nombre: values.nombre,
+                                        apellido: values.apellido,
+                                        id_municipio: municipioId,
+                                        direccion: values.direccion,
+                                        telefono: values.telefono,
+                                        genero:genero,
+                                        fecha_nacimiento: values.fecha_nacimiento,
+                                        estado_civil: estado_civil,
+                                        id_profesion: profesionId,
+                                        salario_base: values.salario_base,
+                                        posicion: values.posicion,
+                                        fecha_contratacion: values.fecha_contratacion,
+                                        correo: values.correo,
+                                        contrasenia: values.contrasenia,
+                                        id_rol: values.id_rol,
+                                        createBy: 1
+                                    }
 
-                                    const responseTransaction = await fetchCreateNewEmployeeTransaction(newList);
+                                    const responseTransaction = await fetchCreateNewEmployeeTransaction(ListEmployee);
                                     actions.resetForm();
                                     if(responseTransaction.data){
                                         alert(JSON.stringify(responseTransaction.message));
@@ -317,10 +340,10 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
                                                 setFieldValue('id_municipio', event.target.value);
                                             }}
                                             >
-                                                <option value="" disabled selected>Seleccione municipio</option>
+                                                <option  disabled selected>Seleccione municipio</option>
                                                 {
                                                     dataMunicipios.filter(mun => mun.id_departamento === Number(selectedDepartment)).map(({id, nombre}) => (
-                                                        <option key={id} value={Number(id)} >{nombre}</option>
+                                                        <option key={id} value={id} type='number'>{nombre}</option>
                                                     ))
                                                 }
                                             </Field>
@@ -598,7 +621,7 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
                                         <label htmlFor='rol'className='block text-gray-500 cursor-text text-base font-semibold mb-2'>Rol</label>
                                         <Field onChange={handleChange} id='rol' name='id_rol' as='select' preventDefault={ROLES.USER} className='rounded border-2 border-gray-200 w-2/5 focus:border-green-400 focus:ring-green-400  outline-0'>
                                             <option value={2}>Usuario</option>
-                                            <option value={Number(1)}>Admin</option>
+                                            <option value={1}>Admin</option>
                                         </Field>
                                     </div>
                                     {errors.id_rol && touched.id_rol && (
