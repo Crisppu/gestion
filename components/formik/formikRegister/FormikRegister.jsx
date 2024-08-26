@@ -174,7 +174,7 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
                                         correo: values.correo,
                                         contrasenia: values.contrasenia,
                                         id_rol: values.id_rol,
-                                        createBy: 1
+                                        createBy: !session?.user ? 1 : session.user.id
                                     }
 
                                     const responseTransaction = await fetchCreateNewEmployeeTransaction(ListEmployee);

@@ -6,6 +6,7 @@ import { getSessionNextAuth } from "@/app/api/auth/[...nextauth]/getSessionAsync
 export default async function NavBar() {
 
     const session = await getSessionNextAuth();
+    console.log(session);
 
 
     return (
