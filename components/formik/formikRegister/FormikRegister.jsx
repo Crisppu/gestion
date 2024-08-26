@@ -20,32 +20,25 @@ const registerSchema = Yup.object().shape(
         cui: Yup.string()
         .matches(/^\d{13}$/, 'El CUI es incorrecto')
         .required('El campo es obligatorio'),
-
-
         nit: Yup.string()
         .matches(/^\d{8}$/, 'El NIT es incorrecto')
         .required('El campo es obligatorio'),
-
         nombre: Yup.string()
         .matches(/^[A-Za-z\s]+$/, 'El nombre solo puede contener letras')
         .min(2,'nombre muy corto')
         .max(30,'nombre muy largo')
         .required('El campo es obligatorio'),
-
         apellido: Yup.string()
         .matches(/^[A-Za-z\s]+$/, 'El apellido solo puede contener letras')
         .min(2,'apellido muy corto')
         .max(30,'apellido muy largo')
         .required('El campo es obligatorio'),
-
-
-        // pais: Yup.string()
-        // .required('El campo es obligatorio'),
-        // departamento_pais: Yup.string()
-        // .required('El campo es obligatorio'),
-        // id_municipio: Yup.number()
-        // .required('El campo es obligatorio'),
-
+        pais: Yup.string()
+        .required('El campo es obligatorio'),
+        departamento_pais: Yup.string()
+        .required('El campo es obligatorio'),
+        id_municipio: Yup.string()
+        .required('El campo es obligatorio'),
         direccion: Yup.string()
         .matches(/^[A-Za-z0-9\s]+$/, 'No se permiten caracteres especiales (@,/,*,%,&)')
         .min(5,'Dirección muy corta')
@@ -54,7 +47,6 @@ const registerSchema = Yup.object().shape(
         telefono: Yup.string()
         .matches(/^\d{8}$/, 'Formato incorrecto')
         .required('El campo es obligatorio'),
-
         genero: Yup.string()
         .oneOf(['0', '1'], 'Seleccione su género')
         .required('El campo es obligatorio'),
@@ -74,12 +66,10 @@ const registerSchema = Yup.object().shape(
         .required('El campo es obligatorio'),
         fecha_contratacion: Yup.date()
         .required('El campo es obligatorio'),
-
         correo: Yup.string()
         .email('Invalid email format')
         .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,'El email es invalido')
         .required('El campo es obligatorio'),
-
         contrasenia: Yup.string()
         .min(6, 'Contraseña debe tener al menos 6 caracteres')
         .required('El campo es obligatorio'),
@@ -131,7 +121,7 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
 
     const [selectedCountry, setSelectedCountry] = useState('');
     const [selectedDepartment, setSelectedDepartment] = useState('');
-    const [getMunicipios, setMunicipio] = useState([]);
+    const [getMunicipios, setMunicipio] = useState('');
     const [selectedDepartmentCompanie, setSelectedDepartmentCompanie] = useState('');
 
 
@@ -166,9 +156,6 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
                                     if(response.data) {
                                         alert(JSON.stringify(response.message))
                                     }
-                                    // const{pais,departamento_pais,departamento_empresa, confirmar_contrasenia, ...newList}=values;
-                                    // const r = values.id_municipio;
-                                    // console.log(municipioId );
                                     const ListEmployee = {
                                         cui: values.cui,
                                         nit: values.nit,
@@ -294,8 +281,9 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
                                             setSelectedCountry(selectedValue);
                                             setFieldValue('pais', selectedValue);
                                             setSelectedDepartment(''); // Resetea el departamento al cambiar el país
-                                            setFieldValue('departamento_pais', '');
-                                            setFieldValue('id_municipio', ''); // Resetea el municipio al cambiar el país
+                                            setMunicipio('');
+                                            setFieldValue('departamento_pais',null);
+                                            setFieldValue('id_municipio', null); // Resetea el municipio al cambiar el país
                                         }}
                                         >
                                             <option value="" disabled selected>Seleccione Pais</option>
@@ -318,13 +306,14 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
                                                 const selectedValue = event.target.value;
                                                 setSelectedDepartment(selectedValue);
                                                 setFieldValue('departamento_pais', selectedValue);
-                                                setFieldValue('id_municipio', ''); // Resetea el municipio al cambiar el departamento
+                                                setMunicipio('');
+                                                setFieldValue('id_municipio', null); // Resetea el municipio al cambiar el departamento
                                             }}>
                                                 <option value="" disabled selected>Seleccione Departamento</option>
                                                 {
-                                                    selectedCountry ? dataDepartamentsCuontries.filter(dep => dep.id_pais === Number(selectedCountry)).map(({id, nombre}) => (
+                                                    dataDepartamentsCuontries.filter(dep => dep.id_pais === Number(selectedCountry)).map(({id, nombre}) => (
                                                         <option key={id} value={id}>{nombre}</option>
-                                                    )) : null
+                                                    ))
                                                 }
                                             </Field>
                                             {errors.departamento_pais && touched.departamento_pais && (
@@ -336,14 +325,16 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
                                         <div className='flex-3'>
                                             <label htmlFor="municipio" className="block text-gray-500 cursor-text text-base font-semibold mb-2">Municipio</label>
                                             <Field id='municipio' name='id_municipio' component='select' className='rounded border-2 border-gray-200  focus:border-green-400 focus:ring-green-400  outline-0'
+                                            value={getMunicipios}
                                             onChange={(event) => {
                                                 setFieldValue('id_municipio', event.target.value);
+                                                setMunicipio(event.target.value);
                                             }}
                                             >
-                                                <option  disabled selected>Seleccione municipio</option>
+                                                <option value="" disabled selected>Seleccione municipio</option>
                                                 {
                                                     dataMunicipios.filter(mun => mun.id_departamento === Number(selectedDepartment)).map(({id, nombre}) => (
-                                                        <option key={id} value={id} type='number'>{nombre}</option>
+                                                        <option key={id} value={id} >{nombre}</option>
                                                     ))
                                                 }
                                             </Field>
@@ -485,7 +476,7 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
                                                 <option value="" disabled selected>Seleccione Departamento</option>
                                                 {
                                                     dataDepartamentsCompanie.map(({id, nombre}) => (
-                                                        <option key={Number(id)} value={Number(id)}>{nombre}</option>
+                                                        <option key={id} value={id}>{nombre}</option>
                                                     ))
                                                 }
                                             </Field>
@@ -504,7 +495,7 @@ export default function FormikRegister({dataCountries, dataDepartamentsCuontries
                                                 <option value="" disabled selected>Seleccione Profesion</option>
                                                 {
                                                     selectedDepartmentCompanie ? dataProfessions.filter(profesion => profesion.id_departamentoempresa === Number(selectedDepartmentCompanie)).map(({id, nombre}) => (
-                                                        <option key={Number(id)} value={Number(id)}>{nombre}</option>
+                                                        <option key={id} value={id}>{nombre}</option>
                                                     )) : null
                                                 }
                                             </Field>
